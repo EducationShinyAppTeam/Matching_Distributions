@@ -480,7 +480,7 @@ shinyServer(function(session, input, output) {
   })
   
   observeEvent(input$nextq,{
-    if(value[["mistake"]] == 4){
+    if(value[["mistake"]] == 7){
       
       updateButton(session, "nextq", disabled = TRUE)
       value[["mistake"]] <- 0
@@ -519,30 +519,43 @@ shinyServer(function(session, input, output) {
   output$distPlot <- renderUI({
     
     if(value[["mistake"]] == 0){
-      img(src = "hangman-1.jpg")
+      img(src = "1.jpf")
       
     }
     
     ## Head
     else if(value[["mistake"]] ==1 ) {
-      img(src = "hangman-2.jpg")
+      img(src = "2.jpf")
     }
     
     ## Arms
     else if(value[["mistake"]] == 2) {
-      img(src="hangman-3.jpg")
+      img(src="3.jpf")
     }
     
     ## Body
     else if(value[["mistake"]] ==3 ) {
-      img(src="hangman-4.jpg")
+      img(src="4.jpf")
     }
     
     
     ## Legs
     else if(value[["mistake"]] ==4) {
-      img(src= "hangman-5.jpg")
+      img(src= "5.jpf")
     }
+    
+    else if(value[["mistake"]] ==5) {
+      img(src= "6.jpf")
+    }
+    
+    else if(value[["mistake"]] ==6) {
+      img(src= "7.jpf")
+    }
+    
+    else if(value[["mistake"]] ==7) {
+      img(src= "8.jpf")
+    }
+    
     
   })
   

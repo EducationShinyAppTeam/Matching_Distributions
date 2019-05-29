@@ -5,16 +5,21 @@ library(shinyBS)
 library(shinyWidgets)
 
 ui <- dashboardPage(skin = "blue",
-                    dashboardHeader(title = "Matching distributions"),
-                    dashboardSidebar(
-                      sidebarMenu(
-                        id ="tabs",
-                        menuItem("Overview", tabName = "overview",icon = icon("dashboard")),
-                        menuItem("Challenge", tabName = "matchingdist",icon = icon("cogs"))
-                      )
+                    dashboardHeader(title = "Matching distributions",
+                      tags$li(class = "dropdown",
+                              tags$a(href= "https://shinyapps.science.psu.edu/",
+                                     icon("home",lib = "font-awesome"))),
+                      tags$li(class = "dropdown",
+                              actionLink("info",icon("info"),class = "myClass"))
                     ),
-                    dashboardBody(
-                      
+            dashboardSidebar(
+              sidebarMenu(
+                id = "tabs",
+                menuItem("Overview", tabName = "overview",icon = icon("dashboard")),
+                menuItem("Challenge", tabName = "matchingdist",icon = icon("cogs"))
+              )
+            ),
+            dashboardBody(
                       tags$head(
                         tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css"),
                         tags$style(HTML(
@@ -69,7 +74,7 @@ ui <- dashboardPage(skin = "blue",
                                     wellPanel(style = "background-color: #EAF2F8",
                                               
                                               uiOutput("question"),
-                                              tags$style(type='text/css', '#question {font-weight:bold;font-size: 20px;background-color: #EAF2F8;color: black;}')
+                                              tags$style(type='text/css', '#question {font-weight:bold;font-size: 20px;background-color: #EAF2F8;color: black;}','.well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }')
                                               
                                     ),
                                     
@@ -84,35 +89,31 @@ ui <- dashboardPage(skin = "blue",
                                     #tags$head(tags$style(HTML("#hint {font-weight:bold;font-size:19px;color:blue}"))),
                                     
                                     #br(),
-                                    div(style="display: inline-block;vertical-align:top;",
-                                        tags$a(href='https://shinyapps.science.psu.edu/',tags$img(src='homebut.PNG', width = 19))
-                                    ),
-                                    div(style="display: inline-block;vertical-align:top;",
-                                        circleButton("inshint",icon = icon("info"), status = "myClass",size = "xs")
-                                    ),
-                                    div(style="display: inline-block;vertical-align:top;",
-                                        circleButton("hint",icon = icon("question"), status = "myClass",size = "xs")
-                                    ),
+                                    #div(style="display: inline-block;vertical-align:top;",
+                                    #    tags$a(href='https://shinyapps.science.psu.edu/',tags$img(src='homebut.PNG', width = 19))
+                                    #),
+                                    #div(style="display: inline-block;vertical-align:top;",
+                                    #    circleButton("inshint",icon = icon("info"), status = "myClass",size = "xs")
+                                    #),
+                                    #div(style="display: inline-block;vertical-align:top;",
+                                    #    circleButton("hint",icon = icon("question"), status = "myClass",size = "xs")
+                                    #),
                                     
-                                    wellPanel(style = "background-color:#EAF2F8",
-                                              fluidRow(
-                                                uiOutput("result")
-                                              )),
-                                    
-                                    fluidRow(
-                                      
-                                      bsButton('reset','RELOAD', size = 'large', style = 'warning',disabled = TRUE),
-                                      bsButton('restart','RESTART',size = 'large', style = 'primary',disabled = TRUE)
-                                    ),
-                                    tags$style(type='text/css', '#result {color: black;}'),
-                                    
+                                    #wellPanel(style = "background-color:#EAF2F8",
+                                     #         fluidRow(
+                                     #           uiOutput("result")
+                                     #         )),
                                     
                                     fluidRow(
                                       h3("Identify the distribution of given text:")
                                     ),
                                     
+                                    div(style="display: inline-block;vertical-align:top;",
+                                        circleButton("hint",icon = icon("question"), status = "myClass",size = "xs")
+                                    ),
+                                    
                                     fluidRow(uiOutput('answerbox'),selectInput('answer',"",c('Select Distribution','Bernoulli','Binomial','Continuous Uniform','Discrete Uniform','Exponential','Gamma','Geometric','Negative Binomial',
-                                                                                             'Normal','Poisson'), width='40%'),
+                                                                                             'Normal','Poisson'), width='100%'),
                                              uiOutput('mark')),
                                     
                                     
@@ -120,12 +121,13 @@ ui <- dashboardPage(skin = "blue",
                                     br(),
                                     br(),
                                     
-                                    tags$head(tags$style(HTML("#result {font-size: 17px;background-color:#EAF2F8}")))
+                                    tags$head(tags$style(HTML("#result {font-size: 17px;background-color:#EAF2F8}"))),
                                     
                                     
-                                  ),
+                                  width = 6),
                                   mainPanel(
                                     br(),
+                                    width = 6,
                                     
                                     fluidRow(
                                       uiOutput("correct", align = 'center')
@@ -135,8 +137,8 @@ ui <- dashboardPage(skin = "blue",
                                     br(),
                                     
                                     fluidRow(
-                                      column(6, offset = 2,
-                                             uiOutput("distPlot"))),
+                                             uiOutput("distPlot", align = 'center')
+                                    ),
                                     br(),
                                     br(),
                                     br(),
@@ -144,7 +146,7 @@ ui <- dashboardPage(skin = "blue",
                                     fluidRow(
                                       column(3, offset=2,
                                              bsButton('nextq', "Next Question", size ="large", style="success",disabled=TRUE)),
-                                      column(3, 
+                                      column(3,
                                              bsButton('submit', "Submit", size= "large", style ="warning", disabled =FALSE)))
                                     # bsPopover("distPlot", " ","Choose different measure of association for each numeric value, then click Submit to check your answer", place="left")
                                     
