@@ -3,6 +3,9 @@ library(shiny)
 library(shinyjs)
 library(shinyBS)
 library(shinyWidgets)
+library(V8)
+library(png)
+library(ggplot2)
 
 ui <- dashboardPage(skin = "blue",
                     dashboardHeader(title = "Matching distributions",
@@ -26,12 +29,10 @@ ui <- dashboardPage(skin = "blue",
                           '.popover-title{
                           color:black;
                           font-size:18px;
-                          background-color: #337ab7
+                          background-color: white;
                           }'
-                        ))
-                        
-                        ),
-                      
+                        ))),
+
                       tabItems( 
                         
                         #Overview Tab
@@ -45,77 +46,96 @@ ui <- dashboardPage(skin = "blue",
                                    scenario."),
                                 br(),
                                 h3(strong("Instructions:")),
-                                h4(tags$li("You'll start this game with nothing on the gallows, if you provide a wrong answer, a part of the body will be drawn, and if the whole little man is completely drawn, then you have lost this game.")),
+                                h4(tags$li("You'll start this game with a little man on the top of the tree, if you provide a wrong answer, the little man will fall to a lower branch, and when the little man fall on the floor, then you have lost this game. If you get 10 questions correct without the little man fall to the floor, you have win the game and save the little man!")),
+                                h4(tags$li("Please select which probability distribution(s) you 'd like to use")),
                                 h4(tags$li("Read the given text before you make your choice. Make sure you understand the scenario text provided.")),
                                 h4(tags$li("If you need some extra help, click the 'hint'.")),
                                 h4(tags$li("After you select the distribution, click 'Submit' to check your answer.")),
                                 h4(tags$li("Once you click 'Submit', you cannot revise your answer. You can only click 'Next Question' to move on your challenge.")),
                                 
                                 div(style = "text-align:center",
-                                    bsButton("go", "G O !", icon("bolt"), size = "medium",style = "primary")),
+                                    actionButton("go", "G O !", icon("bolt"), size = "medium",style = 'color: #fff; background-color: #337ab7; border-color: #2e6da4',class="circle grow")),
                                 br(),
                                 h3(strong("Acknowledgements:")),
-                                h4("This app was developed and coded by Zhiliang Zhang.")
+                                h4("This app was developed and coded by Zhiliang Zhang and futher updated by Yiyang Wang and Yuqing Lei.")
                                 ),
                         
-                        
                         # Challenge Tab
-                        
                         tabItem(tabName = "matchingdist",
-                                # div(style="display: inline-block;vertical-align:top;",
-                                #     tags$a(href='https://shinyapps.science.psu.edu/',tags$img(src='homebut.PNG', width = 19))
-                                # ),
-                                # div(style="display: inline-block;vertical-align:top;",
-                                #     circleButton("hint",icon = icon("info"), status = "myClass",size = "xs")
-                                # ),
+                                fluidRow(
+                                  column(width=6, h4("Please select the distributions you'd like to use in this app")),
+                                  br(),br(),br(),
+                                  column(
+                                    width = 2,
+                                    dropdownButton(
+                                      label = "Discrete distributions",circle = FALSE, status = "default", width='12px',
+                                      fluidRow(
+                                        column(
+                                          width = 3,
+                                          actionButton("selectAllD","Select All",size="small"),
+                                          checkboxGroupInput(inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
+                                        )
+                                      )
+                                    ),
+                                    verbatimTextOutput(outputId = "res1")
+                                  ),
+                                
+                                  column(
+                                    width = 2,
+                                    dropdownButton(
+                                      label = "Continuous distributions",circle = FALSE, status = "default", width = '100%',
+                                      #tags$label("Pick which continuous distribution(s) to use in the app:"),
+                                      fluidRow(
+                                        column(
+                                          width = 2,
+                                          actionButton("selectAllC","Select All", size="small"),
+                                          checkboxGroupInput(inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal"), width = '100%')
+                                        )
+                                      )
+                                    ),
+                                    verbatimTextOutput(outputId = "res2")
+                                ),
+                                   column(2, offset=1,
+                                       bsButton('filter', "Filter", size= "large", style="warning",disabled =FALSE))),
+
                                 titlePanel("Matching the text with the distribution"),
                                 sidebarLayout(
                                   sidebarPanel(
                                     wellPanel(style = "background-color: #EAF2F8",
-                                              
                                               uiOutput("question"),
-                                              tags$style(type='text/css', '#question {font-weight:bold;font-size: 20px;background-color: #EAF2F8;color: black;}','.well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }')
+                                              tags$style(type='text/css', '#question {font-weight:bold;font-size: 25px;background-color: #EAF2F8;color: black;}','.well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }')
+                                    ),
+                                    
+                                    wellPanel(style = "background-color: #EAF2F8",
                                               
-                                    ),
-                                    
-                                    # div(style="display: inline-block;vertical-align:top;",
-                                    #     circleButton("hint",icon = icon("question",class = "glyphicon glyphicon-question-sign"), size = "xs")
-                                    # ),
-                                    
-                                    #br(),
-                                    
-                                    ###Change the icon color###
-                                    
-                                    #tags$head(tags$style(HTML("#hint {font-weight:bold;font-size:19px;color:blue}"))),
-                                    
-                                    #br(),
-                                    #div(style="display: inline-block;vertical-align:top;",
-                                    #    tags$a(href='https://shinyapps.science.psu.edu/',tags$img(src='homebut.PNG', width = 19))
-                                    #),
-                                    #div(style="display: inline-block;vertical-align:top;",
-                                    #    circleButton("inshint",icon = icon("info"), status = "myClass",size = "xs")
-                                    #),
-                                    #div(style="display: inline-block;vertical-align:top;",
-                                    #    circleButton("hint",icon = icon("question"), status = "myClass",size = "xs")
-                                    #),
-                                    
-                                    #wellPanel(style = "background-color:#EAF2F8",
-                                     #         fluidRow(
-                                     #           uiOutput("result")
-                                     #         )),
-                                    
-                                    fluidRow(
-                                      h3("Identify the distribution of given text:")
-                                    ),
-                                    
-                                    div(style="display: inline-block;vertical-align:top;",
-                                        circleButton("hint",icon = icon("question"), status = "myClass",size = "xs")
-                                    ),
-                                    
-                                    fluidRow(uiOutput('answerbox'),selectInput('answer',"",c('Select Distribution','Bernoulli','Binomial','Continuous Uniform','Discrete Uniform','Exponential','Gamma','Geometric','Negative Binomial',
-                                                                                             'Normal','Poisson'), width='100%'),
-                                             uiOutput('mark')),
-                                    
+                                              fluidRow(
+                                                column(10,
+                                                h4("Identify the distribution of given text:",
+                                                   tags$li(style="display: inline-block;", circleButton("hint",icon = icon("question"), status = "myClass",size = "xs"))
+                                                ))),
+                                                
+                                              fluidRow(
+                                                tags$style(type='text/css', ".selectize-dropdown-content {max-height: 500px; }"),
+                                                column(8, 
+                                                       uiOutput('answerbox'), 
+                                                       selectInput('answer',"",c('Select Distribution'), width='100%')),
+                                                br(),
+                                                column(1, uiOutput('mark')),
+                                                column(3,
+                                                       bsButton('submit', "Submit", size= "large", style="warning",disabled =FALSE)),
+                                                br(),br(),br(),
+                                                
+                                                column(4,
+                                                         bsButton('nextq', "Next Question", size ="large", style="success",disabled=TRUE)),
+                                                column(4,
+                                                         bsButton('restart', "Restart the game", size = "large", style= "warning", disabled=FALSE)),
+                                                br(), br(), br())),
+                                    wellPanel(style = "background-color: #EAF2F8",
+                                              fluidRow(
+                                                column(width=12, 
+                                                       uiOutput('feedback'))
+                                  )),
+                                  
                                     
                                     br(),
                                     br(),
@@ -123,100 +143,24 @@ ui <- dashboardPage(skin = "blue",
                                     
                                     tags$head(tags$style(HTML("#result {font-size: 17px;background-color:#EAF2F8}"))),
                                     
-                                    
                                   width = 6),
                                   mainPanel(
-                                    br(),
+                                    
                                     width = 6,
                                     
-                                    fluidRow(
-                                      uiOutput("correct", align = 'center')
-                                    ),
-                                    
-                                    br(),
-                                    br(),
-                                    
+                                     fluidRow(
+                                       uiOutput("correct", align = 'center')
+                                     ),
                                     fluidRow(
                                              uiOutput("distPlot", align = 'center')
                                     ),
                                     br(),
                                     br(),
-                                    br(),
-                                    
-                                    fluidRow(
-                                      column(3, offset=2,
-                                             bsButton('nextq', "Next Question", size ="large", style="success",disabled=TRUE)),
-                                      column(3,
-                                             bsButton('submit', "Submit", size= "large", style ="warning", disabled =FALSE)))
-                                    # bsPopover("distPlot", " ","Choose different measure of association for each numeric value, then click Submit to check your answer", place="left")
-                                    
-                                    
+                                    br()
                                   ),
                                   position ="left"
-                                  
-                                )
-                                
-                                
-                                ####Previous Layout####
-                                
-                                # wellPanel(
-                                #   
-                                #   fluidRow(
-                                #     h3("Identify the measure association of the following numeric values: ")
-                                #   ),
-                                # 
-                                #   column(3,
-                                #         selectInput('first',uiOutput('box1'),c('Relative Risk', 'Risk', 'Odds Ratio', "Probability")),
-                                #         uiOutput('mark1')),
-                                #   column(3, 
-                                #          selectInput('second',uiOutput('box2'),c('Relative Risk', 'Risk', 'Odds Ratio', "Probability")),
-                                #          uiOutput('mark2')),
-                                #   column(3,
-                                #          selectInput('third',uiOutput('box3'),c('Relative Risk', 'Risk', 'Odds Ratio', "Probability")),
-                                #          uiOutput('mark3') ),
-                                #   column(3,
-                                #          selectInput('fourth',uiOutput('box4'),c('Relative Risk', 'Risk', 'Odds Ratio', "Probability")),
-                                #          uiOutput('mark4')),
-                                #   # fluidRow(
-                                #   #   column(4, offset= 7,
-                                #   #    verbatimTextOutput("result")     
-                                #   #   )
-                                #   # ),
-                                #     
-                                # fluidRow(
-                                # column(3, offset=7,
-                                #          verbatimTextOutput("result"))),
-                                # 
-                                # plotOutput("distPlot",width = "50%"),
-                                # 
-                                # 
-                                # column(2, offset=6,
-                                #        bsButton('nextq', "Next Question", size ="large", style="success",disabled=TRUE)),
-                                # column(2, offset = 6,
-                                #        bsButton('submit', "Submit", size= "large", style ="warning", disabled =FALSE)),
-                                # 
-                                # tags$head(tags$style(HTML("#result {font-size: 18px;background-color:white}"))),
-                                # 
-                                # bsPopover("disPlot", " ","Choose different measure of association for each numeric value, then click Submit to check your answer", place="right"),
-                                # 
-                                # br(),
-                                # br(),
-                                # br(),
-                                # br(),
-                                # br()
-                                # 
-                                # 
-                                # 
-                                # )
-                                
-                                
-                        )
-                        
-                      )
-                      
-                        )
-                    
-                        )
+                                )))))
+
 
 
 

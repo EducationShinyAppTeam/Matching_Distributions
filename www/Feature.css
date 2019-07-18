@@ -21,6 +21,10 @@ font-weight: bold;
 font-size: 15px;
 }
 */
+aside.main-sidebar {
+	background-color: black !important;
+}
+
 .btn-myClass {
     background-color: #000000;
     border: none;
@@ -42,9 +46,15 @@ font-size: 15px;
   background-color: transparent;
   border: none;
   width : 250px;
-  color: red;
+  color: blue;
   font-weight: bold;
   font-size: 13px;
   line-height: 7px;
   text-align: center;
-}*/
+}
+.selectize-dropdown-content {
+  max-height: auto;
+  overflow-y: auto;
+  background: ghostwhite;
+}
+*/
