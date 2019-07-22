@@ -6,6 +6,7 @@ library(shinyWidgets)
 library(V8)
 library(png)
 library(ggplot2)
+library(rlocker)
 
 ui <- dashboardPage(skin = "blue",
                     dashboardHeader(title = "Matching distributions",

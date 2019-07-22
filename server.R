@@ -3,6 +3,8 @@ library(shinyjs)
 library(shinyBS)
 library(plotrix)
 library(shinyWidgets)
+library(rlocker)
+
 numberRow<-numeric()
 hint<-c()
 correct_answer<-c()
@@ -10,6 +12,35 @@ bank <- read.csv("distribution - distribution.csv")
 bank <- data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
 
 shinyServer(function(session, input, output) {
+  
+  #####add rlocker#####
+  # Gets current page address from the current session
+  getCurrentAddress <- function(session){
+    return(paste0(
+      session$clientData$url_protocol, "//",
+      session$clientData$url_hostname,
+      session$clientData$url_pathname, ":",
+      session$clientData$url_port,
+      session$clientData$url_search
+    ))
+  }
+  
+  # Initialize Learning Locker connection
+  connection <- rlocker::connect(session, list(
+    base_url = "https://learning-locker.stat.vmhost.psu.edu/",
+    auth = "Basic ZDQ2OTNhZWZhN2Q0ODRhYTU4OTFmOTlhNWE1YzBkMjQxMjFmMGZiZjo4N2IwYzc3Mjc1MzU3MWZkMzc1ZDliY2YzOTNjMGZiNzcxOThiYWU2",
+    agent = rlocker::createAgent()
+  ))
+  
+  # Setup demo app and user.
+  currentUser <- 
+    connection$agent
+  
+  if(connection$status != 200){
+    warning(paste(connection$status, "\nTry checking your auth token.")) 
+  }
+  
+  ###end rlocker set up##
   
   observeEvent(input$go, {
     updateTabItems(session, "tabs", "matchingdist")
@@ -180,14 +211,40 @@ shinyServer(function(session, input, output) {
     
   ###SUBMIT BUTTON###
    observeEvent(input$submit,{ 
+     correct_answer<<-bank[id,4]
       output$mark <- renderUI({
-        correct_answer<<-bank[id,4]
         if (!is.null(input$answer)){
           if (input$answer == correct_answer){
             img(src = "check.png",width = 30)
           }
           else{
-            img(src = "cross.png",width = 30)}}})})
+            img(src = "cross.png",width = 30)}}})
+      
+      answer<-isolate(input$answer)
+      statement <- rlocker::createStatement(
+        list(
+          verb = list(
+            display = "answered"
+          ),
+          object = list(
+            id = paste0(getCurrentAddress(session), "#", id),
+            name = paste('Question', id),
+            description = bank[id, 3]
+          ),
+          result = list(
+            success = any(answer == correct_answer),
+            response = answer
+          )
+        )
+      )
+      
+      # Store statement in locker and return status
+      status <- rlocker::store(session, statement)
+      
+      print(statement) # remove me
+      print(status) # remove me
+      }
+      )
    
    ###NEXT QUESTION BUTTON###
     observeEvent(input$nextq,{
