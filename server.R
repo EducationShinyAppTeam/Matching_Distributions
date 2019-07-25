@@ -143,7 +143,7 @@ shinyServer(function(session, input, output) {
   observeEvent(input$filter,{
     discretechosen=input$discretelist
     continuouschosen=input$continuouslist
-    distributionchosen <<- c(discretechosen, continuouschosen) 
+    distributionchosen <<- c(discretechosen, continuouschosen)
     if ("Bernoulli" %in% distributionchosen){
       numberRow <- c(numberRow, 1:6)
     }
@@ -210,6 +210,8 @@ shinyServer(function(session, input, output) {
    })
     
   ###SUBMIT BUTTON###
+  
+  
    observeEvent(input$submit,{ 
      correct_answer<<-bank[id,4]
       output$mark <- renderUI({
@@ -221,6 +223,7 @@ shinyServer(function(session, input, output) {
             img(src = "cross.png",width = 30)}}})
       
       answer<-isolate(input$answer)
+
       statement <- rlocker::createStatement(
         list(
           verb = list(
@@ -228,7 +231,7 @@ shinyServer(function(session, input, output) {
           ),
           object = list(
             id = paste0(getCurrentAddress(session), "#", id),
-            name = paste('Question', id),
+            name =  paste('Question', id, list(distributionchosen)),
             description = bank[id, 3]
           ),
           result = list(
