@@ -3,47 +3,26 @@ library(shinyjs)
 library(shinyBS)
 library(plotrix)
 library(shinyWidgets)
-library(rlocker)
-
 numberRow<-numeric()
 hint<-c()
 correct_answer<-c()
-bank <- read.csv("distribution - distribution.csv")
+bank <- read.csv("distributionG.csv")
 bank <- data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
 
 shinyServer(function(session, input, output) {
   
-  #####add rlocker#####
-  # Gets current page address from the current session
-  getCurrentAddress <- function(session){
-    return(paste0(
-      session$clientData$url_protocol, "//",
-      session$clientData$url_hostname,
-      session$clientData$url_pathname, ":",
-      session$clientData$url_port,
-      session$clientData$url_search
-    ))
-  }
-  
-  # Initialize Learning Locker connection
-  connection <- rlocker::connect(session, list(
-    base_url = "https://learning-locker.stat.vmhost.psu.edu/",
-    auth = "Basic ZDQ2OTNhZWZhN2Q0ODRhYTU4OTFmOTlhNWE1YzBkMjQxMjFmMGZiZjo4N2IwYzc3Mjc1MzU3MWZkMzc1ZDliY2YzOTNjMGZiNzcxOThiYWU2",
-    agent = rlocker::createAgent()
-  ))
-  
-  # Setup demo app and user.
-  currentUser <- 
-    connection$agent
-  
-  if(connection$status != 200){
-    warning(paste(connection$status, "\nTry checking your auth token.")) 
-  }
-  
-  ###end rlocker set up##
+  observeEvent(input$info,{
+    sendSweetAlert(
+      session = session,
+      title = "Instructions:",
+      text = "Choose the probability you'd like to use, then answer the questions by choosing the correct distribution",
+      type = "info"
+    )
+  })
   
   observeEvent(input$go, {
     updateTabItems(session, "tabs", "matchingdist")
+    updateButton(session, 'submit', disabled=TRUE)
   })
   
   observeEvent(input$submit, {
@@ -58,36 +37,36 @@ shinyServer(function(session, input, output) {
     updateButton(session, "submit", disabled = FALSE)
     updateButton(session, "nextq", disabled = TRUE)
   })
+  
+  observeEvent(input$restart,{
     
-   observeEvent(input$restart,{
-     
-     updateButton(session, "submit", disabled = FALSE)
-     updateButton(session,"restart",disabled =FALSE)
-     updateButton(session, "filter", disabled = FALSE)
-     
-     output$question <- renderUI({
-       return(NULL)
-     })
-     
-     output$feedback <- renderUI({
-       return(NULL)
-     })
-     observeEvent(input$hint,{
-         h4("please select the distribution")
-     })
-     updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = NULL)
-     updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal"), selected = NULL)
-     
-     updateSelectInput(session,"answer","",c('Select Distribution'))
-     
-     output$mark <- renderUI({
-       img(src = NULL,width = 30)
-     })
-     numberRow<<-numeric()
-     value[["mistake"]] <<-0
-     print(value[["mistake"]])
-     value$correct <<- 0
-   })
+    updateButton(session, "submit", disabled = FALSE)
+    updateButton(session,"restart",disabled =FALSE)
+    updateButton(session, "filter", disabled = FALSE)
+    
+    output$question <- renderUI({
+      return(NULL)
+    })
+    
+    output$feedback <- renderUI({
+      return(NULL)
+    })
+    observeEvent(input$hint,{
+      h4("please select the distribution")
+    })
+    updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = NULL)
+    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal"), selected = NULL)
+    
+    updateSelectInput(session,"answer","",c('Select Distribution'))
+    
+    output$mark <- renderUI({
+      img(src = NULL,width = 30)
+    })
+    numberRow<<-numeric()
+    value[["mistake"]] <<-0
+    print(value[["mistake"]])
+    value$correct <<- 0
+  })
   
   output$result <- renderUI({
     
@@ -122,7 +101,7 @@ shinyServer(function(session, input, output) {
     {
       updateButton(session, "selectAllD", label="Unselect")
       updateCheckboxGroupInput(session,"discretelist",choices=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"),selected=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
-      }
+    }
   })
   #######select AllContinuous#####
   observeEvent(input$selectAllC,{
@@ -136,14 +115,14 @@ shinyServer(function(session, input, output) {
     {
       updateButton(session, "selectAllC", label="Unselect")
       updateCheckboxGroupInput(session,"continuouslist",choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal"), selected=c("Continuous Uniform", "Gamma", "Exponential", "Normal"))
-      }
+    }
   })
   
   ######## Mixture of Dropdown and Checkbox########
   observeEvent(input$filter,{
     discretechosen=input$discretelist
     continuouschosen=input$continuouslist
-    distributionchosen <<- c(discretechosen, continuouschosen)
+    distributionchosen <<- c(discretechosen, continuouschosen) 
     if ("Bernoulli" %in% distributionchosen){
       numberRow <- c(numberRow, 1:6)
     }
@@ -185,84 +164,56 @@ shinyServer(function(session, input, output) {
     }
     numberRow<<-numberRow
     print(numberRow)
+    updateButton(session, 'submit', disabled = FALSE)
     ###Select questions from edited databank###
     output$question <- renderUI({
-        id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
-        numberRow<<-numberRow[!numberRow %in% id]
-        print(numberRow)
-        updateSelectInput(session, "answer", label = NULL, choices = c("Select distribution",distributionchosen),
-                            selected = NULL)
-        output$mark <- renderUI({
-          img(src = NULL,width = 30)
-        })
-        return(bank[id,3])
-        })
+      id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
+      numberRow<<-numberRow[!numberRow %in% id]
+      print(numberRow)
+      updateSelectInput(session, "answer", label = NULL, choices = c("Select distribution",distributionchosen),
+                        selected = NULL)
+      output$mark <- renderUI({
+        img(src = NULL,width = 30)
+      })
+      return(bank[id,3])
     })
+  })
   
   ###PRINT HINT####
-   observeEvent(input$hint,{
-     sendSweetAlert(
-       session = session,
-       title = "Hint:",
-       closeOnClickOutside = TRUE,
-       h4(bank[id,6])
-     )
-   })
-    
+  observeEvent(input$hint,{
+    sendSweetAlert(
+      session = session,
+      title = "Hint:",
+      closeOnClickOutside = TRUE,
+      h4(bank[id,6])
+    )
+  })
+  
   ###SUBMIT BUTTON###
+  observeEvent(input$submit,{ 
+    output$mark <- renderUI({
+      correct_answer<<-bank[id,4]
+      if (!is.null(input$answer)){
+        if (input$answer == correct_answer){
+          img(src = "check.png",width = 30)
+        }
+        else{
+          img(src = "cross.png",width = 30)}}})})
   
-  
-   observeEvent(input$submit,{ 
-     correct_answer<<-bank[id,4]
-      output$mark <- renderUI({
-        if (!is.null(input$answer)){
-          if (input$answer == correct_answer){
-            img(src = "check.png",width = 30)
-          }
-          else{
-            img(src = "cross.png",width = 30)}}})
-      
-      answer<-isolate(input$answer)
-
-      statement <- rlocker::createStatement(
-        list(
-          verb = list(
-            display = "answered"
-          ),
-          object = list(
-            id = paste0(getCurrentAddress(session), "#", id),
-            name =  paste('Question', id, list(distributionchosen)),
-            description = bank[id, 3]
-          ),
-          result = list(
-            success = any(answer == correct_answer),
-            response = answer
-          )
-        )
+  ###NEXT QUESTION BUTTON###
+  observeEvent(input$nextq,{
+    if (length(numberRow)==1){
+      sendSweetAlert(
+        session = session,
+        title = "Error:",
+        type = "error",
+        closeOnClickOutside = TRUE,
+        h4('We have run out of questions. Please restart it')
       )
-      
-      # Store statement in locker and return status
-      status <- rlocker::store(session, statement)
-      
-      print(statement) # remove me
-      print(status) # remove me
-      }
-      )
-   
-   ###NEXT QUESTION BUTTON###
-    observeEvent(input$nextq,{
-      if (length(numberRow)==1){
-        sendSweetAlert(
-          session = session,
-          title = "Error:",
-          type = "error",
-          closeOnClickOutside = TRUE,
-          h4('We have run out of questions. Please restart it')
-        )
-        updateButton(session, "submit", disabled = TRUE)
-        updateButton(session,"nextq",disabled =TRUE)
-      }
-      else{
+      updateButton(session, "submit", disabled = TRUE)
+      updateButton(session,"nextq",disabled =TRUE)
+    }
+    else{
       id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
       print(id)
       hint<-bank[id,6]
@@ -274,75 +225,77 @@ shinyServer(function(session, input, output) {
       updateButton(session, "submit", disabled = FALSE)
       updateSelectInput(session, "answer", label = NULL, choices = c("Select distribution", distributionchosen),
                         selected = NULL)
-         output$mark <- renderUI({
-           img(src = NULL,width = 30)
-         })
-         ###FEEDBACK###
-         output$feedback <- renderUI({
-           return(NULL)})}
+      output$mark <- renderUI({
+        img(src = NULL,width = 30)
       })
+      ###FEEDBACK###
+      output$feedback <- renderUI({
+        return(NULL)})}
+  })
   
-    observeEvent(input$submit,{
-          
-      if(value[["mistake"]] == 4){
-        
-        updateButton(session, "nextq", disabled = TRUE)
-        
-        output$result <- renderUI({
-          h3("You have lost this Game. You need to click 'restart' button to start this game from the beginning.")
-        })
-      }
-    })
+  observeEvent(input$submit,{
+    
+    if(value[["mistake"]] == 4){
+      
+      updateButton(session, "nextq", disabled = TRUE)
+      
+      output$result <- renderUI({
+        h3("You have lost this Game. You need to click 'restart' button to start this game from the beginning.")
+      })
+    }
+  })
   
   ###########Counting Correct answers############
-   observeEvent(input$submit,{
-     if (!is.null(input$answer)){
-       correct_answer<<-bank[id,4]
-       if (input$answer == correct_answer){
-          value$correct <<- value$correct + 1
-          if (value$correct==10){
-            sendSweetAlert(
-              session = session,
-              title = "Success:",
-              type = "success",
-              closeOnClickOutside = TRUE,
-              h4('Congrats! You Win! Please click Restart to start over.')
-            )
-            updateButton(session, "submit", disabled = TRUE)
-            updateButton(session, "nextq", disabled = TRUE)
-            updateButton(session, "restart", disabled = FALSE)
-          }
-          }
-       
-       if(input$answer != correct_answer){
-           value[["mistake"]] <<- value[["mistake"]]+1
-           if (value[["mistake"]]==4){
-             sendSweetAlert(
-               session = session,
-               title = "Lost:",
-               type = "error",
-               closeOnClickOutside = TRUE,
-               h4('You lost. Please click Restart to start over')
-             )
-             updateButton(session, "submit", disabled = TRUE)
-             updateButton(session, "nextq", disabled = TRUE)
-             updateButton(session, "restart", disabled = FALSE)
-           }
-       }
-       ###FEEDBACK###
-       output$feedback <- renderUI({
-
-         h4(strong('Feedback',br(),bank[id,7]))})
-       
-       output$result <- renderUI({
-         h3("Congratulation! You got this one correct. Click 'Next Question' to move on your challenge")
-       })
-     }
-     if(value$correct == 8){
-       updateButton(session, "nextq", disabled = TRUE)
-       updateButton(session, "restart", disabled = FALSE)
-     }
-   })
+  observeEvent(input$submit,{
+    if (!is.null(input$answer)){
+      correct_answer<<-bank[id,4]
+      if (input$answer == correct_answer){
+        value$correct <<- value$correct + 1
+        if (value$correct==10){
+          sendSweetAlert(
+            session = session,
+            title = "Success:",
+            type = "success",
+            closeOnClickOutside = TRUE,
+            h4('Congrats! You Win! Please click Restart to start over.')
+          )
+          updateButton(session, "submit", disabled = TRUE)
+          updateButton(session, "nextq", disabled = TRUE)
+          updateButton(session, "restart", disabled = FALSE)
+        }
+      }
+      
+      if(input$answer != correct_answer){
+        value[["mistake"]] <<- value[["mistake"]]+1
+        if (value[["mistake"]]==4){
+          updateButton(session, "submit", disabled = TRUE)
+          updateButton(session, "nextq", disabled = TRUE)
+          updateButton(session, "restart", disabled = FALSE)
+          updateButton(session, "filter", disabled = TRUE)
+          sendSweetAlert(
+            session = session,
+            title = "Lost:",
+            type = "error",
+            closeOnClickOutside = TRUE,
+            h4('You lost. Please click Restart to start over')
+          )
+          
+        }
+      }
+      ###FEEDBACK###
+      output$feedback <- renderUI({
+        
+        h4(strong('Feedback',br(),bank[id,7]))})
+      
+      output$result <- renderUI({
+        h3("Congratulation! You got this one correct. Click 'Next Question' to move on your challenge")
+      })
+    }
+    if(value$correct == 8){
+      updateButton(session, "nextq", disabled = TRUE)
+      updateButton(session, "restart", disabled = FALSE)
+    }
+  })
   
   ##### Draw the Hangman Game#####
   
@@ -371,4 +324,4 @@ shinyServer(function(session, input, output) {
       img(src= "GAMEOVER.png")
     }
   })
-  })
+})

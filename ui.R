@@ -6,24 +6,23 @@ library(shinyWidgets)
 library(V8)
 library(png)
 library(ggplot2)
-library(rlocker)
 
 ui <- dashboardPage(skin = "blue",
                     dashboardHeader(title = "Matching distributions",
-                      tags$li(class = "dropdown",
-                              tags$a(href= "https://shinyapps.science.psu.edu/",
-                                     icon("home",lib = "font-awesome"))),
-                      tags$li(class = "dropdown",
-                              actionLink("info",icon("info"),class = "myClass"))
+                                    tags$li(class = "dropdown",
+                                            tags$a(href= "https://shinyapps.science.psu.edu/",
+                                                   icon("home",lib = "font-awesome"))),
+                                    tags$li(class = "dropdown",
+                                            actionLink("info",icon("info"),class = "myClass"))
                     ),
-            dashboardSidebar(
-              sidebarMenu(
-                id = "tabs",
-                menuItem("Overview", tabName = "overview",icon = icon("dashboard")),
-                menuItem("Challenge", tabName = "matchingdist",icon = icon("cogs"))
-              )
-            ),
-            dashboardBody(
+                    dashboardSidebar(
+                      sidebarMenu(
+                        id = "tabs",
+                        menuItem("Overview", tabName = "overview",icon = icon("dashboard")),
+                        menuItem("Challenge", tabName = "matchingdist",icon = icon("cogs"))
+                      )
+                    ),
+                    dashboardBody(
                       tags$head(
                         tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css"),
                         tags$style(HTML(
@@ -33,7 +32,7 @@ ui <- dashboardPage(skin = "blue",
                           background-color: white;
                           }'
                         ))),
-
+                      
                       tabItems( 
                         
                         #Overview Tab
@@ -80,7 +79,7 @@ ui <- dashboardPage(skin = "blue",
                                     ),
                                     verbatimTextOutput(outputId = "res1")
                                   ),
-                                
+                                  
                                   column(
                                     width = 2,
                                     dropdownButton(
@@ -95,10 +94,10 @@ ui <- dashboardPage(skin = "blue",
                                       )
                                     ),
                                     verbatimTextOutput(outputId = "res2")
-                                ),
-                                   column(2, offset=1,
-                                       bsButton('filter', "Filter", size= "large", style="warning",disabled =FALSE))),
-
+                                  ),
+                                  column(2, offset=1,
+                                         bsButton('filter', "Filter", size= "large", style="warning",disabled =FALSE))),
+                                
                                 titlePanel("Matching the text with the distribution"),
                                 sidebarLayout(
                                   sidebarPanel(
@@ -111,10 +110,10 @@ ui <- dashboardPage(skin = "blue",
                                               
                                               fluidRow(
                                                 column(10,
-                                                h4("Identify the distribution of given text:",
-                                                   tags$li(style="display: inline-block;", circleButton("hint",icon = icon("question"), status = "myClass",size = "xs"))
-                                                ))),
-                                                
+                                                       h4("Identify the distribution of given text:",
+                                                          tags$li(style="display: inline-block;", circleButton("hint",icon = icon("question"), status = "myClass",size = "xs"))
+                                                       ))),
+                                              
                                               fluidRow(
                                                 tags$style(type='text/css', ".selectize-dropdown-content {max-height: 500px; }"),
                                                 column(8, 
@@ -127,16 +126,16 @@ ui <- dashboardPage(skin = "blue",
                                                 br(),br(),br(),
                                                 
                                                 column(4,
-                                                         bsButton('nextq', "Next Question", size ="large", style="success",disabled=TRUE)),
+                                                       bsButton('nextq', "Next Question", size ="large", style="success",disabled=TRUE)),
                                                 column(4,
-                                                         bsButton('restart', "Restart the game", size = "large", style= "warning", disabled=FALSE)),
+                                                       bsButton('restart', "Restart the game", size = "large", style= "warning", disabled=FALSE)),
                                                 br(), br(), br())),
                                     wellPanel(style = "background-color: #EAF2F8",
                                               fluidRow(
                                                 column(width=12, 
                                                        uiOutput('feedback'))
-                                  )),
-                                  
+                                              )),
+                                    
                                     
                                     br(),
                                     br(),
@@ -144,16 +143,16 @@ ui <- dashboardPage(skin = "blue",
                                     
                                     tags$head(tags$style(HTML("#result {font-size: 17px;background-color:#EAF2F8}"))),
                                     
-                                  width = 6),
+                                    width = 6),
                                   mainPanel(
                                     
                                     width = 6,
                                     
-                                     fluidRow(
-                                       uiOutput("correct", align = 'center')
-                                     ),
                                     fluidRow(
-                                             uiOutput("distPlot", align = 'center')
+                                      uiOutput("correct", align = 'center')
+                                    ),
+                                    fluidRow(
+                                      uiOutput("distPlot", align = 'center')
                                     ),
                                     br(),
                                     br(),
@@ -161,8 +160,3 @@ ui <- dashboardPage(skin = "blue",
                                   ),
                                   position ="left"
                                 )))))
-
-
-
-
-
