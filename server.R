@@ -79,8 +79,8 @@ shinyServer(function(session, input, output) {
     })
     numberRow<<-numeric()
     value[["mistake"]] <<-0
-    print(value[["mistake"]])
-    value$correct <<- 0
+    #print(value[["mistake"]])
+    value$correct = 0
   })
   
   output$result <- renderUI({
@@ -100,7 +100,6 @@ shinyServer(function(session, input, output) {
   })
   
   output$correct <- renderUI({
-    
     h3("Number of correct answers:" ,"", value$correct )
   })
   
@@ -178,13 +177,13 @@ shinyServer(function(session, input, output) {
       numberRow <- c(numberRow, 91)
     }
     numberRow<<-numberRow
-    print(numberRow)
+    #print(numberRow)
     updateButton(session, 'submit', disabled = FALSE)
     ###Select questions from edited databank###
     output$question <- renderUI({
       id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
       numberRow<<-numberRow[!numberRow %in% id]
-      print(numberRow)
+      #print(numberRow)
       updateSelectInput(session, "answer", label = NULL, choices = c("Select distribution",distributionchosen),
                         selected = NULL)
       output$mark <- renderUI({
@@ -230,10 +229,10 @@ shinyServer(function(session, input, output) {
     }
     else{
       id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
-      print(id)
+      #print(id)
       hint<-bank[id,6]
       numberRow<<-numberRow[!numberRow %in% id]
-      print(numberRow)
+      #print(numberRow)
       output$question <- renderUI({
         return(bank[id,3])
       })
@@ -265,7 +264,7 @@ shinyServer(function(session, input, output) {
     if (!is.null(input$answer)){
       correct_answer<<-bank[id,4]
       if (input$answer == correct_answer){
-        value$correct <<- value$correct + 1
+        value$correct = value$correct + 1
         if (value$correct==10){
           sendSweetAlert(
             session = session,
@@ -324,24 +323,27 @@ shinyServer(function(session, input, output) {
   }
   
   observeEvent(input$submit,{
-    bank[id,3]
-    id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
+    discretechosen=input$discretelist
+    continuouschosen=input$continuouslist
+    distributionchosen <<- c(discretechosen, continuouschosen)
+    correct_answer<<-bank[id,4]
     statement <- rlocker::createStatement(
       list(
         verb = list(
           display = "answered"
         ),
         object = list(
-          id = paste0(getCurrentAddress(session), "#", value$index),
-          name = paste('Question', value$index),
-          description = bank[value$index, 2]
+          id = paste0(getCurrentAddress(session), "#", id),
+          name = toString(distributionchosen),
+          description = paste('Question', id, ":", bank[id, 3])
         ),
         result = list(
-          success = any(answer == ans[value$index,1]),
-          response = paste(getResponseText(value$index, answer))
-        )
+          success = any(input$answer == correct_answer),
+          completion = any(input$answer != 'Select distribution'),
+          response = paste(input$answer, correct_answer, sep = ";"),
+          duration = value$correct/10
+        ))
       )
-    )
     
     # Store statement in locker and return status
     status <- rlocker::store(session, statement)
