@@ -348,8 +348,8 @@ shinyServer(function(session, input, output) {
     # Store statement in locker and return status
     status <- rlocker::store(session, statement)
     
-    print(statement) # remove me
-    print(status) # remove me
+    #print(statement) # remove me
+    #print(status) # remove me
   })
   
   ##### Draw the Hangman Game#####
