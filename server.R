@@ -3,6 +3,7 @@ library(shinyjs)
 library(shinyBS)
 library(plotrix)
 library(shinyWidgets)
+library(rlocker)
 numberRow<-numeric()
 hint<-c()
 correct_answer<-c()
@@ -10,6 +11,20 @@ bank <- read.csv("distributionG.csv")
 bank <- data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
 
 shinyServer(function(session, input, output) {
+  #Initialized learning  locker connection
+  connection <- rlocker::connect(session, list(
+    base_url = "https://learning-locker.stat.vmhost.psu.edu/",
+    auth = "Basic ZDQ2OTNhZWZhN2Q0ODRhYTU4OTFmOTlhNWE1YzBkMjQxMjFmMGZiZjo4N2IwYzc3Mjc1MzU3MWZkMzc1ZDliY2YzOTNjMGZiNzcxOThiYWU2",
+    agent = rlocker::createAgent()
+  ))
+  
+  # Setup demo app and user.
+  currentUser <- 
+    connection$agent
+  if(connection$status != 200){
+    warning(paste(connection$status, "\nTry checking your auth token.")) 
+  }
+  
   
   observeEvent(input$info,{
     sendSweetAlert(
@@ -295,6 +310,44 @@ shinyServer(function(session, input, output) {
       updateButton(session, "nextq", disabled = TRUE)
       updateButton(session, "restart", disabled = FALSE)
     }
+  })
+  
+  # Gets current page address from the current session
+  getCurrentAddress <- function(session){
+    return(paste0(
+      session$clientData$url_protocol, "//",
+      session$clientData$url_hostname,
+      session$clientData$url_pathname, ":",
+      session$clientData$url_port,
+      session$clientData$url_search
+    ))
+  }
+  
+  observeEvent(input$submit,{
+    bank[id,3]
+    id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
+    statement <- rlocker::createStatement(
+      list(
+        verb = list(
+          display = "answered"
+        ),
+        object = list(
+          id = paste0(getCurrentAddress(session), "#", value$index),
+          name = paste('Question', value$index),
+          description = bank[value$index, 2]
+        ),
+        result = list(
+          success = any(answer == ans[value$index,1]),
+          response = paste(getResponseText(value$index, answer))
+        )
+      )
+    )
+    
+    # Store statement in locker and return status
+    status <- rlocker::store(session, statement)
+    
+    print(statement) # remove me
+    print(status) # remove me
   })
   
   ##### Draw the Hangman Game#####
