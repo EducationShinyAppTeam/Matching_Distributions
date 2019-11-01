@@ -3,7 +3,6 @@ library(shinyjs)
 library(shinyBS)
 library(plotrix)
 library(shinyWidgets)
-library(rlocker)
 numberRow<-numeric()
 hint<-c()
 correct_answer<-c()
@@ -11,20 +10,6 @@ bank <- read.csv("distributionG.csv")
 bank <- data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
 
 shinyServer(function(session, input, output) {
-  #Initialized learning  locker connection
-  connection <- rlocker::connect(session, list(
-    base_url = "https://learning-locker.stat.vmhost.psu.edu/",
-    auth = "Basic ZDQ2OTNhZWZhN2Q0ODRhYTU4OTFmOTlhNWE1YzBkMjQxMjFmMGZiZjo4N2IwYzc3Mjc1MzU3MWZkMzc1ZDliY2YzOTNjMGZiNzcxOThiYWU2",
-    agent = rlocker::createAgent()
-  ))
-  
-  # Setup demo app and user.
-  currentUser <- 
-    connection$agent
-  if(connection$status != 200){
-    warning(paste(connection$status, "\nTry checking your auth token.")) 
-  }
-  
   
   observeEvent(input$info,{
     sendSweetAlert(
@@ -60,14 +45,20 @@ shinyServer(function(session, input, output) {
     updateButton(session, "filter", disabled = FALSE)
     
     output$question <- renderUI({
+      withMathJax()
       return(NULL)
+      output$test1 <- renderUI({withMathJax()})
+      output$test2 <- renderUI({withMathJax()})
     })
     
     output$feedback <- renderUI({
+      withMathJax()
       return(NULL)
+      output$test1 <- renderUI({withMathJax()})
+      output$test2 <- renderUI({withMathJax()})
     })
     observeEvent(input$hint,{
-      h4("please select the distribution")
+      p("Please select the distribution")
     })
     updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = NULL)
     updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal"), selected = NULL)
@@ -79,12 +70,12 @@ shinyServer(function(session, input, output) {
     })
     numberRow<<-numeric()
     value[["mistake"]] <<-0
-    #print(value[["mistake"]])
-    value$correct = 0
+    print(value[["mistake"]])
+    value$correct <<- 0
   })
   
   output$result <- renderUI({
-    
+    withMathJax()
     h3("Choose the distribution from the list to match the given text, then click 'Submit' to check your answer.")
   })
   
@@ -100,6 +91,7 @@ shinyServer(function(session, input, output) {
   })
   
   output$correct <- renderUI({
+    withMathJax()
     h3("Number of correct answers:" ,"", value$correct )
   })
   
@@ -133,6 +125,8 @@ shinyServer(function(session, input, output) {
   })
   
   ######## Mixture of Dropdown and Checkbox########
+  
+  #TO DO: revise this code so that it is NOT hard coded, but rather makes use columns in the data frame.
   observeEvent(input$filter,{
     discretechosen=input$discretelist
     continuouschosen=input$continuouslist
@@ -181,6 +175,7 @@ shinyServer(function(session, input, output) {
     updateButton(session, 'submit', disabled = FALSE)
     ###Select questions from edited databank###
     output$question <- renderUI({
+      withMathJax()
       id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
       numberRow<<-numberRow[!numberRow %in% id]
       #print(numberRow)
@@ -191,6 +186,8 @@ shinyServer(function(session, input, output) {
       })
       return(bank[id,3])
     })
+    output$test1 <- renderUI({withMathJax()})
+    output$test2 <- renderUI({withMathJax()})
   })
   
   ###PRINT HINT####
@@ -222,18 +219,19 @@ shinyServer(function(session, input, output) {
         title = "Error:",
         type = "error",
         closeOnClickOutside = TRUE,
-        h4('We have run out of questions. Please restart it')
+        h4('We have run out of questions. Please restart.')
       )
       updateButton(session, "submit", disabled = TRUE)
       updateButton(session,"nextq",disabled =TRUE)
     }
     else{
       id <<-sample(numberRow, 1, replace = FALSE, prob = NULL)
-      #print(id)
+      print(id)
       hint<-bank[id,6]
       numberRow<<-numberRow[!numberRow %in% id]
-      #print(numberRow)
+      print(numberRow)
       output$question <- renderUI({
+        withMathJax()
         return(bank[id,3])
       })
       updateButton(session, "submit", disabled = FALSE)
@@ -264,7 +262,7 @@ shinyServer(function(session, input, output) {
     if (!is.null(input$answer)){
       correct_answer<<-bank[id,4]
       if (input$answer == correct_answer){
-        value$correct = value$correct + 1
+        value$correct <<- value$correct + 1
         if (value$correct==10){
           sendSweetAlert(
             session = session,
@@ -298,7 +296,7 @@ shinyServer(function(session, input, output) {
       }
       ###FEEDBACK###
       output$feedback <- renderUI({
-        
+        withMathJax()
         h4(strong('Feedback',br(),bank[id,7]))})
       
       output$result <- renderUI({
@@ -309,47 +307,6 @@ shinyServer(function(session, input, output) {
       updateButton(session, "nextq", disabled = TRUE)
       updateButton(session, "restart", disabled = FALSE)
     }
-  })
-  
-  # Gets current page address from the current session
-  getCurrentAddress <- function(session){
-    return(paste0(
-      session$clientData$url_protocol, "//",
-      session$clientData$url_hostname,
-      session$clientData$url_pathname, ":",
-      session$clientData$url_port,
-      session$clientData$url_search
-    ))
-  }
-  
-  observeEvent(input$submit,{
-    discretechosen=input$discretelist
-    continuouschosen=input$continuouslist
-    distributionchosen <<- c(discretechosen, continuouschosen)
-    correct_answer<<-bank[id,4]
-    statement <- rlocker::createStatement(
-      list(
-        verb = list(
-          display = "answered"
-        ),
-        object = list(
-          id = paste0(getCurrentAddress(session), "#", id),
-          name = toString(distributionchosen),
-          description = paste('Question', id, ":", bank[id, 3])
-        ),
-        result = list(
-          success = any(input$answer == correct_answer),
-          completion = any(input$answer != 'Select distribution'),
-          response = paste(input$answer, correct_answer, sep = ";"),
-          duration = value$correct/10
-        ))
-      )
-    
-    # Store statement in locker and return status
-    status <- rlocker::store(session, statement)
-    
-    #print(statement) # remove me
-    #print(status) # remove me
   })
   
   ##### Draw the Hangman Game#####
