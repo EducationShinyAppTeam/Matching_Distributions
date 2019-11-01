@@ -57,18 +57,18 @@ ui <- dashboardPage(skin = "blue",
                                     actionButton("go", "G O !", icon("bolt"), size = "medium",style = 'color: #fff; background-color: #337ab7; border-color: #2e6da4',class="circle grow")),
                                 br(),
                                 h3(strong("Acknowledgements:")),
-                                h4("This app was developed and coded by Zhiliang Zhang and futher updated by Yiyang Wang and Yuqing Lei.")
+                                h4("This app was developed and coded by Zhiliang Zhang and futher updated and modified by Yiyang Wang and Yuqing Lei.")
                                 ),
                         
                         # Challenge Tab
                         tabItem(tabName = "matchingdist",
                                 fluidRow(
-                                  column(width=6, h4("Please select the distributions you'd like to use in this app")),
+                                  column(width=6, h3("Please select the distributions you'd like to use in this app")),
                                   br(),br(),br(),
                                   column(
                                     width = 2,
                                     dropdownButton(
-                                      label = "Discrete distributions",circle = FALSE, status = "default", width='12px',
+                                      label = "Discrete distributions",circle = FALSE, status = "default", width='20px',
                                       fluidRow(
                                         column(
                                           width = 3,
@@ -84,12 +84,11 @@ ui <- dashboardPage(skin = "blue",
                                     width = 2,
                                     dropdownButton(
                                       label = "Continuous distributions",circle = FALSE, status = "default", width = '100%',
-                                      #tags$label("Pick which continuous distribution(s) to use in the app:"),
                                       fluidRow(
                                         column(
                                           width = 2,
                                           actionButton("selectAllC","Select All", size="small"),
-                                          checkboxGroupInput(inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal"), width = '100%')
+                                          checkboxGroupInput(inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), width = '100%')
                                         )
                                       )
                                     ),

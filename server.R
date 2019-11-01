@@ -55,7 +55,7 @@ shinyServer(function(session, input, output) {
   
   observeEvent(input$restart,{
     
-    updateButton(session, "submit", disabled = FALSE)
+    updateButton(session, "submit", disabled = TRUE)
     updateButton(session,"restart",disabled =FALSE)
     updateButton(session, "filter", disabled = FALSE)
     
@@ -70,7 +70,7 @@ shinyServer(function(session, input, output) {
       h4("please select the distribution")
     })
     updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = NULL)
-    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal"), selected = NULL)
+    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), selected = NULL)
     
     updateSelectInput(session,"answer","",c('Select Distribution'))
     
@@ -123,12 +123,12 @@ shinyServer(function(session, input, output) {
     else if (input$selectAllC%%2 == 0)
     {
       updateButton(session, "selectAllC", label="Select All")
-      updateCheckboxGroupInput(session,"continuouslist", choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal"))
+      updateCheckboxGroupInput(session,"continuouslist", choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"))
     }
     else
     {
       updateButton(session, "selectAllC", label="Unselect")
-      updateCheckboxGroupInput(session,"continuouslist",choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal"), selected=c("Continuous Uniform", "Gamma", "Exponential", "Normal"))
+      updateCheckboxGroupInput(session,"continuouslist",choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), selected=c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"))
     }
   })
   
@@ -219,8 +219,8 @@ shinyServer(function(session, input, output) {
     if (length(numberRow)==1){
       sendSweetAlert(
         session = session,
-        title = "Error:",
-        type = "error",
+        title = "Warning:",
+        # type = "error",
         closeOnClickOutside = TRUE,
         h4('We have run out of questions. Please restart it')
       )
@@ -298,17 +298,20 @@ shinyServer(function(session, input, output) {
       }
       ###FEEDBACK###
       output$feedback <- renderUI({
-        
-        h4(strong('Feedback',br(),bank[id,7]))})
+        correct_answer<<-bank[id,4]
+        if (input$answer == correct_answer){
+          h4(strong("CORRECT!",br(),bank[id,7]))}
+        else{h4(strong("Hint:",br(),bank[id,6]))}
+          })
       
       output$result <- renderUI({
         h3("Congratulation! You got this one correct. Click 'Next Question' to move on your challenge")
       })
     }
-    if(value$correct == 8){
-      updateButton(session, "nextq", disabled = TRUE)
-      updateButton(session, "restart", disabled = FALSE)
-    }
+    # if(value$correct == 8){
+    #   updateButton(session, "nextq", disabled = TRUE)
+    #   updateButton(session, "restart", disabled = FALSE)
+    # }
   })
   
   # Gets current page address from the current session
