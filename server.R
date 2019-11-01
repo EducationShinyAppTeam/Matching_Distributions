@@ -68,6 +68,7 @@ shinyServer(function(session, input, output) {
     output$mark <- renderUI({
       img(src = NULL,width = 30)
     })
+    id<<-0
     numberRow<<-numeric()
     value[["mistake"]] <<-0
     print(value[["mistake"]])
