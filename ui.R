@@ -281,5 +281,3 @@ ui <- dashboardPage(
           ),
           position = "left"
         )))))
-
-
