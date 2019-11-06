@@ -1,3 +1,8 @@
+library(shiny)
+library(shinyjs)
+library(shinyBS)
+library(plotrix)
+library(shinyWidgets)
 library(shinydashboard)
 library(shiny)
 library(shinyjs)
@@ -110,7 +115,7 @@ ui <- dashboardPage(
         fluidRow(
           column(
             width = 6,
-            h4("Please select the distributions you'd like to use in this app")
+            h4("Please select the distributions you'd like to use in this app and click Filter")
           ),
           br(),
           br(),

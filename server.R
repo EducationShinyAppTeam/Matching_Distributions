@@ -3,6 +3,15 @@ library(shinyjs)
 library(shinyBS)
 library(plotrix)
 library(shinyWidgets)
+library(shinydashboard)
+library(shiny)
+library(shinyjs)
+library(shinyBS)
+library(shinyWidgets)
+library(V8)
+library(png)
+library(ggplot2)
+
 numberRow<-numeric()
 hint<-c()
 correct_answer<-c()
@@ -131,45 +140,43 @@ shinyServer(function(session, input, output) {
   observeEvent(input$filter,{
     discretechosen=input$discretelist
     continuouschosen=input$continuouslist
-    distributionchosen <<- c(discretechosen, continuouschosen) 
+    distributionchosen <<- c(discretechosen, continuouschosen)
+    #numberRow <- dplyr::filter(bank, bank$distribution %in% distributionchosen)
     if ("Bernoulli" %in% distributionchosen){
-      numberRow <- c(numberRow, 2:7)
+      numberRow <- c(numberRow, 1:6)
     }
     if ("Beta" %in% distributionchosen){
-      numberRow <- c(numberRow, 8:11)
+      numberRow <- c(numberRow, 7:10)
     }
     if ("Binomial" %in% distributionchosen){
-      numberRow <- c(numberRow, 12:21)
+      numberRow <- c(numberRow, 11:20)
     }
     if ("Continuous Uniform" %in% distributionchosen){
-      numberRow <- c(numberRow, 22:30)
+      numberRow <- c(numberRow, 21:29)
     }
     if ("Discrete Uniform" %in% distributionchosen){
-      numberRow <- c(numberRow, 31:35)
+      numberRow <- c(numberRow, 30:34)
     }
     if ("Exponential" %in% distributionchosen){
-      numberRow <- c(numberRow, 36:43)
+      numberRow <- c(numberRow, 35:42)
     }
     if ("Gamma" %in% distributionchosen){
-      numberRow <- c(numberRow, 44:50)
+      numberRow <- c(numberRow, 43:49)
     }
     if ("Geometric" %in% distributionchosen){
-      numberRow <- c(numberRow, 51:57)
+      numberRow <- c(numberRow, 50:56)
     }
     if ("Hypergeometric" %in% distributionchosen){
-      numberRow <- c(numberRow, 58:61)
+      numberRow <- c(numberRow, 57:60)
     }
     if ("Negative Binomial" %in% distributionchosen){
-      numberRow <- c(numberRow, 62:69)
+      numberRow <- c(numberRow, 61:68)
     }
     if ("Normal" %in% distributionchosen){
-      numberRow <- c(numberRow, 70:81)
+      numberRow <- c(numberRow, 69:80)
     }
     if ("Poisson" %in% distributionchosen){
-      numberRow <- c(numberRow, 82:91)
-    }
-    if ("Weibull" %in% distributionchosen){
-      numberRow <- c(numberRow, 91)
+      numberRow <- c(numberRow, 81:90)
     }
     numberRow<<-numberRow
     updateButton(session, 'submit', disabled = FALSE)
