@@ -241,7 +241,10 @@ shinyServer(function(session, input, output) {
       print(numberRow)
       output$question <- renderUI({
         withMathJax()
+        output$test1 <- renderUI({withMathJax()})
+        output$test2 <- renderUI({withMathJax()})
         return(h3(strong(bank[id,3])))
+        
       })
       updateButton(session, "submit", disabled = FALSE)
       updateSelectInput(session, "answer", label = NULL, choices = c("Select distribution", distributionchosen),
