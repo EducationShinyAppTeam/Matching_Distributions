@@ -141,6 +141,7 @@ shinyServer(function(session, input, output) {
     discretechosen=input$discretelist
     continuouschosen=input$continuouslist
     distributionchosen <<- c(discretechosen, continuouschosen)
+    numberRow <- numeric()
     #numberRow <- dplyr::filter(bank, bank$distribution %in% distributionchosen)
     if ("Bernoulli" %in% distributionchosen){
       numberRow <- c(numberRow, 1:6)
