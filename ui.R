@@ -143,13 +143,13 @@ ui <- dashboardPage(
                     "Negative Binomial"
                   ),
                   selected = c(
-                    "Bernoulli",
-                    "Binomial",
-                    "Discrete Uniform",
-                    "Poisson",
-                    "Geometric",
+                    "Bernoulli", 
+                    "Binomial", 
+                    "Discrete Uniform", 
+                    "Poisson", 
+                    "Geometric", 
                     "Negative Binomial"
-                  )
+                    )
                 )
               ))
             ),
@@ -171,8 +171,9 @@ ui <- dashboardPage(
                 checkboxGroupInput(
                   inputId = "continuouslist",
                   label = NULL,
-                  choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"),
+                  choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), 
                   selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"),
+                  
                   width = '100%')
               ))
             ),
