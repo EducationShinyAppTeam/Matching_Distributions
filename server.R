@@ -69,8 +69,10 @@ shinyServer(function(session, input, output) {
     observeEvent(input$hint,{
       p("Please select the distribution")
     })
-    updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = NULL)
-    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), selected = NULL)
+    updateButton(session, "selectAllD", label="Unselect")
+    updateButton(session, "selectAllC", label="Unselect")
+    updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
+    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), selected= c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"))
     
     updateSelectInput(session,"answer","",c('Select Distribution'))
     
@@ -107,8 +109,12 @@ shinyServer(function(session, input, output) {
   
   #######select AllDiscrete#####
   observeEvent(input$selectAllD,{
-    if(input$selectAllD == 0) return(NULL) 
-    else if (input$selectAllD%%2 == 0)
+    if(input$selectAllD == 0) {
+      updateButton(session, "selectAllD", label="Unselect")
+      updateCheckboxGroupInput(session,"discretelist",choices=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"),selected=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
+      
+    }
+    else if (input$selectAllD%%2 == 1)
     {
       updateButton(session, "selectAllD", label="Select All")
       updateCheckboxGroupInput(session,"discretelist", choices=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
@@ -117,12 +123,17 @@ shinyServer(function(session, input, output) {
     {
       updateButton(session, "selectAllD", label="Unselect")
       updateCheckboxGroupInput(session,"discretelist",choices=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"),selected=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
+      
     }
   })
   #######select AllContinuous#####
   observeEvent(input$selectAllC,{
-    if(input$selectAllC == 0) return(NULL) 
-    else if (input$selectAllC%%2 == 0)
+    if(input$selectAllC == 0) {
+      updateButton(session, "selectAllC", label="Unselect")
+      updateCheckboxGroupInput(session,"continuouslist",choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), selected=c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"))
+      
+    } 
+    else if (input$selectAllC%%2 == 1)
     {
       updateButton(session, "selectAllC", label="Select All")
       updateCheckboxGroupInput(session,"continuouslist", choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"))

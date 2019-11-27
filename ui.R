@@ -129,7 +129,7 @@ ui <- dashboardPage(
               width = '12px',
               fluidRow(column(
                 width = 3,
-                actionButton("selectAllD", "Select All", size =
+                actionButton("selectAllD", "Unselect", size =
                                "small"),
                 checkboxGroupInput(
                   inputId = "discretelist",
@@ -141,7 +141,15 @@ ui <- dashboardPage(
                     "Poisson",
                     "Geometric",
                     "Negative Binomial"
-                  )
+                  ),
+                  selected = c(
+                    "Bernoulli", 
+                    "Binomial", 
+                    "Discrete Uniform", 
+                    "Poisson", 
+                    "Geometric", 
+                    "Negative Binomial"
+                    )
                 )
               ))
             ),
@@ -158,12 +166,14 @@ ui <- dashboardPage(
               #tags$label("Pick which continuous distribution(s) to use in the app:"),
               fluidRow(column(
                 width = 2,
-                actionButton("selectAllC", "Select All", size =
+                actionButton("selectAllC", "Unselect", size =
                                "small"),
                 checkboxGroupInput(
                   inputId = "continuouslist",
                   label = NULL,
-                  choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"),
+                  choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), 
+                  selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"),
+                  
                   width = '100%')
               ))
             ),
