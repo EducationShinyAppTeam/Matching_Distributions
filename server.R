@@ -24,7 +24,7 @@ shinyServer(function(session, input, output) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = "Choose the probability you'd like to use, then answer the questions by choosing the correct distribution",
+      text = "In this app the user is challenged to identify the probability model for various contextual situations.",
       type = "info"
     )
   })
@@ -108,7 +108,7 @@ shinyServer(function(session, input, output) {
   #######select AllDiscrete#####
   observeEvent(input$selectAllD,{
     if(input$selectAllD == 0) return(NULL) 
-    else if (input$selectAllD%%2 == 0)
+    else if (input$selectAllD%%2 != 0)
     {
       updateButton(session, "selectAllD", label="Select All")
       updateCheckboxGroupInput(session,"discretelist", choices=c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
@@ -122,7 +122,7 @@ shinyServer(function(session, input, output) {
   #######select AllContinuous#####
   observeEvent(input$selectAllC,{
     if(input$selectAllC == 0) return(NULL) 
-    else if (input$selectAllC%%2 == 0)
+    else if (input$selectAllC%%2 != 0)
     {
       updateButton(session, "selectAllC", label="Select All")
       updateCheckboxGroupInput(session,"continuouslist", choices=c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"))
