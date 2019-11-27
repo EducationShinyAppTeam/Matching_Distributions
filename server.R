@@ -69,8 +69,8 @@ shinyServer(function(session, input, output) {
     observeEvent(input$hint,{
       p("Please select the distribution")
     })
-    updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = NULL)
-    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), selected = NULL)
+    updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
+    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices =  c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"), selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal","Beta"))
     
     updateSelectInput(session,"answer","",c('Select Distribution'))
     
