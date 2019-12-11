@@ -315,36 +315,36 @@ ui <- dashboardPage(
 )
 
 server <- function(session, input, output) {
-  
+
   # Learning Locker Statement Generation
   .generateStatement <- function(session, verb = NA, object = NA, description = NA, value = NA) {
-    if(is.na(object)){
+    if (is.na(object)) {
       object <- paste0("#shiny-tab-", session$input$tabs)
     } else {
       object <- paste0("#", object)
     }
-    
+
     stmt <- list(
-      verb =  verb,
+      verb = verb,
       object = list(
         id = paste0(boastUtils::getCurrentAddress(session), object),
         name = paste0(APP_TITLE),
         description = description
       )
     )
-    
-    if(!is.na(value)){
+
+    if (!is.na(value)) {
       stmt$result <- list(
         response = paste(value)
-      ) 
+      )
     }
-    
+
     statement <- rlocker::createStatement(stmt)
     response <- rlocker::store(session, statement)
-    
-    return(response)   
+
+    return(response)
   }
-  
+
   .generateAnsweredStatement <- function(session, verb = NA, object = NA, description = NA, interactionType = NA, response = NA, success = NA, completion = FALSE) {
     statement <- rlocker::createStatement(list(
       verb = verb,
@@ -358,16 +358,12 @@ server <- function(session, input, output) {
         success = success,
         response = response,
         completion = completion
-        # extensions = list(
-        #   ref = "https://shinyapps.science.psu.edu/scoreMatrix", value = paste(as.data.frame(scoreMatrix), collapse = ", ")
-        #   )
       )
-    )
-    )
+    ))
 
-    return(rlocker::store(session, statement))   
+    return(rlocker::store(session, statement))
   }
-  
+
   observeEvent(input$info, {
     sendSweetAlert(
       session = session,
@@ -399,7 +395,7 @@ server <- function(session, input, output) {
     updateButton(session, "submit", disabled = TRUE)
     updateButton(session, "restart", disabled = FALSE)
     updateButton(session, "filter", disabled = FALSE)
-    
+
     GAME_OVER <<- FALSE
     .generateStatement(session, object = "restart", verb = "interacted", description = "Game has been restarted.")
 
@@ -507,9 +503,9 @@ server <- function(session, input, output) {
     discretechosen <- input$discretelist
     continuouschosen <- input$continuouslist
     distributionchosen <<- c(discretechosen, continuouschosen)
-    
+
     .generateStatement(session, object = "filter", verb = "interacted", description = "Please select the distributions you'd like to use in this app and click Filter", value = paste(distributionchosen, sep = ", ", collapse = ", "))
-    
+
     numberRow <- numeric()
     # numberRow <- dplyr::filter(bank, bank$distribution %in% distributionchosen)
     if ("Bernoulli" %in% distributionchosen) {
@@ -660,7 +656,7 @@ server <- function(session, input, output) {
       correct_answer <<- bank[id, 4]
       success <- input$answer == correct_answer
       WIN <- FALSE
-      
+
       if (success) {
         value$correct <<- value$correct + 1
         WIN <- value$correct == WIN_STATE
@@ -673,25 +669,23 @@ server <- function(session, input, output) {
             closeOnClickOutside = TRUE,
             h4("Congrats! You Win! Please click Restart to start over.")
           )
-          
+
           updateButton(session, "submit", disabled = TRUE)
           updateButton(session, "nextq", disabled = TRUE)
           updateButton(session, "restart", disabled = FALSE)
         }
       } else {
-        
         value[["mistake"]] <<- value[["mistake"]] + 1
-        
+
         if (value[["mistake"]] == MAX_TRIES) {
-          
           GAME_OVER <<- TRUE
           WIN <- FALSE
-          
+
           updateButton(session, "submit", disabled = TRUE)
           updateButton(session, "nextq", disabled = TRUE)
           updateButton(session, "restart", disabled = FALSE)
           updateButton(session, "filter", disabled = TRUE)
-          
+
           sendSweetAlert(
             session = session,
             title = "Lost:",
@@ -701,7 +695,7 @@ server <- function(session, input, output) {
           )
         }
       }
-      
+
       .generateAnsweredStatement(
         session,
         object = "submit",
@@ -712,16 +706,16 @@ server <- function(session, input, output) {
         success = success,
         completion = GAME_OVER
       )
-      
-      if(GAME_OVER) {
-        if(WIN) {
+
+      if (GAME_OVER) {
+        if (WIN) {
           .generateStatement(session, object = "game", verb = "completed", description = "Player has won the game.")
         } else {
           .generateStatement(session, object = "game", verb = "completed", description = "Player has lost the game.")
         }
       }
-      
-      
+
+
       ### FEEDBACK###
       output$feedback <- renderUI({
         correct_answer <<- bank[id, 4]
