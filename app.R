@@ -1,12 +1,8 @@
 library(shiny)
 library(shinyjs)
 library(shinyBS)
-library(plotrix)
 library(shinyWidgets)
 library(shinydashboard)
-library(V8)
-library(png)
-library(ggplot2)
 library(boastUtils)
 
 APP_TITLE <<- "Matching Distributions"
