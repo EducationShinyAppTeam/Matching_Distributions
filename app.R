@@ -659,6 +659,7 @@ server <- function(session, input, output) {
     if (!is.null(input$answer)) {
       correct_answer <<- bank[id, 4]
       success <- input$answer == correct_answer
+      WIN <- FALSE
       
       if (success) {
         value$correct <<- value$correct + 1
