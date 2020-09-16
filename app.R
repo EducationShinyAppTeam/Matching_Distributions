@@ -1,318 +1,272 @@
 library(shiny)
-library(shinyjs)
 library(shinyBS)
 library(shinyWidgets)
 library(shinydashboard)
 library(boastUtils)
+library(dplyr)
 
+## App Meta Data----------------------------------------------------------------
 APP_TITLE <<- "Matching Distributions"
-MAX_TRIES <- 4
-WIN_STATE <- 10
-GAME_OVER <- FALSE
+APP_DESCP  <<- paste(
+  "This app provides a hangman-style game format for helping students review",
+  "various probability distributions. Students examine a presented context and",
+  "then categorize the conveyed long-run behavior as being a particular named",
+  "distribution."
+)
+## End App Meta Data------------------------------------------------------------
 
-numberRow <- numeric()
-hint <- c()
-correct_answer <- c()
-bank <- read.csv("distributionG.csv")
-bank <- data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
+# Global Constants and Functions ----
+maxTries <- 4
+winLimit <- 10
 
-ui <- dashboardPage(
-  skin = "blue",
-  dashboardHeader(
-    title = "Matching Distributions",
-    titleWidth = 300,
-    tags$li(
-      class = "dropdown",
-      tags$a(
-        href = "https://shinyapps.science.psu.edu/",
-        icon("home", lib = "font-awesome")
+# Read in Questions ----
+questionBank <- read.csv("questionBank.csv", stringsAsFactors = FALSE)
+
+## Place all questions into a randomized but fixed order by distribution ----
+set.seed(2020)
+questionBank <- questionBank %>%
+  dplyr::group_by(distribution) %>%
+  dplyr::slice_sample(prop = 1)
+set.seed(NULL)
+
+# Define lists of Discrete and Continuous distributions in question questionBank ----
+discDists <- questionBank %>%
+  dplyr::filter(type == "discrete") %>%
+  dplyr::select(distribution) %>%
+  dplyr::distinct(distribution) %>%
+  dplyr::arrange(distribution)
+
+contDists <- questionBank %>%
+  dplyr::filter(type == "continuous") %>%
+  dplyr::select(distribution) %>%
+  dplyr::distinct(distribution) %>%
+  dplyr::arrange(distribution)
+
+# Create the UI ----
+ui <- list(
+  dashboardPage(
+    skin = "blue",
+    ## Header ----
+    dashboardHeader(
+      title = "Matching Distributions",
+      titleWidth = 250,
+      tags$li(class = "dropdown", actionLink("info", icon("info"))),
+      tags$li(class = "dropdown",
+              tags$a(href = "https://shinyapps.science.psu.edu/",
+                     icon("home")
+              )
       )
     ),
-    tags$li(
-      class = "dropdown",
-      actionLink("info", icon("info"), class = "myClass")
-    )
-  ),
-  dashboardSidebar(sidebarMenu(
-    id = "tabs",
-    menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
-    menuItem("Challenge", tabName = "matchingdist", icon = icon("cogs"))
-  )),
-  dashboardBody(
-    withMathJax(),
-    tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css"),
-      tags$style(
-        HTML(
-          ".popover-title{
-                          color:black;
-                          font-size:18px;
-                          background-color: white;
-                          }"
-        )
-      )
-    ),
-
-    tabItems(
-      # Overview Tab
-      tabItem(
-        tabName = "overview",
-        tags$a(href = "http://stat.psu.edu/", tags$img(
-          src = "logo.png", align = "left", width = 180
-        )),
-        br(),
-        br(),
-        br(),
-        h3("About:"),
-        p(
-          "In this App, you will gain practice at associating context with different probability distributions. "
-        ),
-        br(),
-        h3("Instructions:"),
-        tags$ul(
-          tags$li(
-            "You'll start this game with a little man on the top of a tree,  and you are trying to prevent his fall to the ground.  If you provide a wrong answer, he falls to a lower branch and eventually to the ground. If you get 10 questions correct before he falls to the ground, you have won the game and saved the little man!"
-          ),
-          tags$li(
-            "Please select which probability distribution(s) you 'd like to work on and hit the “filter” button."
-          ),
-          tags$li(
-            "Read the given text and choose a distribution from the dropdown menu. Make sure you understand the scenario."
-          ),
-          tags$li(
-            "If you need some extra help, click the 'hint' button (shown as a question mark symbol)."
-          ),
-          tags$li(
-            "After you select the distribution, click 'Submit' to check your answer. "
-          ),
-          tags$li(
-            "Once you click 'Submit', you cannot revise your answer. You can only click 'Next Question' to move on to your next challenge. "
-          )
-        ),
-        div(
-          style = "text-align:center",
-          actionButton(
-            "go",
-            "G O !",
-            icon("bolt"),
-            size = "medium",
-            style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
-            class = "circle grow"
-          )
-        ),
-        br(),
-        h3("Acknowledgements:"),
-        p(
-          "This app was developed and coded by Zhiliang Zhang and futher updated by Yiyang Wang and Yuqing Lei."
-        )
+    ## Sidebar ----
+    dashboardSidebar(
+      width = 250,
+      sidebarMenu(
+        id = "tabs",
+        menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
+        menuItem("Game", tabName = "matchingDist", icon = icon("gamepad")),
+        menuItem("References", tabName = "references", icon = icon("leanpub"))
       ),
-
-      # Challenge Tab
-      tabItem(
-        tabName = "matchingdist",
-        fluidRow(
-          column(
-            width = 6,
-            p("Please select the distributions you'd like to use in this app and click Filter")
+      tags$div(
+        class = "sidebar-logo",
+        boastUtils::psu_eberly_logo("reversed")
+      )
+    ),
+    ## Body ----
+    dashboardBody(
+      tabItems(
+        # Overview Tab ----
+        tabItem(
+          tabName = "overview",
+          h1("Matching Distributions Game"),
+          p(
+            "In this app, you will gain practice at associating contexts with
+          different probability distributions."
           ),
-          br(),
-          br(),
-          br(),
-          column(
-            width = 2,
-            dropdownButton(
-              label = "Discrete distributions",
-              circle = FALSE,
-              status = "default",
-              width = "100%",
-              tags$div(
-                actionButton("selectAllD", "Unselect",
-                  size =
-                    "small"
-                ),
-                checkboxGroupInput(
-                  inputId = "discretelist",
-                  label = NULL,
-                  choices = c(
-                    "Bernoulli",
-                    "Binomial",
-                    "Discrete Uniform",
-                    "Poisson",
-                    "Geometric",
-                    "Negative Binomial"
-                  ),
-                  selected = c(
-                    "Bernoulli",
-                    "Binomial",
-                    "Discrete Uniform",
-                    "Poisson",
-                    "Geometric",
-                    "Negative Binomial"
-                  )
-                )
-              )
+          p(paste(
+            "You'll start this game with a little man on the top of a tree, and you
+          are trying to prevent his fall to the ground. If you provide a wrong
+          answer, he falls to a lower branch and eventually to the ground. If you
+          get", winLimit, "questions correct before he falls to the ground, you have won
+          the game and saved the little man!")
+          ),
+          h2("Instructions"),
+          tags$ol(
+            tags$li(
+              "Select which probability distribution(s) you'd like to work on from
+            the Discrete and Continous distribution menus. (All are selected by
+            default.)"
             ),
-            verbatimTextOutput(outputId = "res1")
-          ),
-
-          column(
-            width = 2,
-            dropdownButton(
-              label = "Continuous distributions",
-              circle = FALSE,
-              status = "default",
-              width = "100%",
-              # tags$label("Pick which continuous distribution(s) to use in the app:"),
-              tags$div(
-                actionButton("selectAllC", "Unselect",
-                  size =
-                    "small"
-                ),
-                checkboxGroupInput(
-                  inputId = "continuouslist",
-                  label = NULL,
-                  choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"),
-                  selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"),
-                )
-              )
+            tags$li("Click the 'Filter' button to process your selections and display
+                  the first context to classify."
             ),
-            verbatimTextOutput(outputId = "res2")
+            tags$li(
+              "Read the given text and choose a distribution from the dropdown menu.
+            Make sure you understand the scenario."
+            ),
+            tags$li("Press the 'Submit' button to check your answer. Once you do,
+                  you cannot revise your answer."),
+            tags$li("If you need a hint, click the '? Hint' button."),
+            tags$li("Press the 'Next Question' button to move on the next question.")
           ),
-          column(
-            2,
-            offset = 1,
+          div(
+            style = "text-align:center",
             bsButton(
-              "filter",
-              "Filter",
+              inputId = "go",
+              label = "GO!",
+              icon = icon("bolt"),
               size = "large",
-              style = "warning",
-              disabled = FALSE
+              style = "default"
             )
+          ),
+          br(),
+          br(),
+          h2("Acknowledgements"),
+          p(
+            "This app was developed and coded by Zhiliang Zhang and futher updated
+          by Yiyang Wang and Yuqing Lei in 2019 and Neil J. Hatfield in 2020.",
+            br(),
+            br(),
+            br(),
+            div(class = "updated", "Last Update: 8/25/2020 by NJH.")
           )
         ),
-
-        titlePanel("Matching the text with the distribution"),
-        sidebarLayout(
-          sidebarPanel(
-            wellPanel(
-              style = "background-color: #EAF2F8",
-              withMathJax(uiOutput("question")),
-              tags$style(
-                type = "text/css",
-                "#question {font-size: 125%;background-color: #EAF2F8;color: black;}",
-                ".well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }"
-              )
-            ),
-
-            wellPanel(
-              style = "background-color: #EAF2F8",
-
-              fluidRow(column(
-                10,
-                p(
-                  "Identify the distribution of given text:",
-                  tags$li(
-                    style = "display: inline-block;",
-                    circleButton(
-                      "hint",
-                      icon = icon("question"),
-                      status = "myClass",
-                      size = "xs"
-                    )
-                  )
+        # Game Tab ----
+        tabItem(
+          tabName = "matchingDist",
+          withMathJax(),
+          h2("Matching Contexts with Distributions"),
+          p("Please select the distributions you'd like to use in this app and
+          click the 'Filter' button."),
+          ### Selection Row ----
+          fluidRow(
+            column(
+              width = 3,
+              dropdownButton(
+                inputId = "discreteDrop",
+                label = "Discrete distributions",
+                circle = FALSE,
+                status = "default",
+                size = "lg",
+                bsButton(
+                  inputId = "selectAllD",
+                  label = "Unselect all",
+                  size = "medium"
+                ),
+                checkboxGroupInput(
+                  inputId = "discreteList",
+                  label = NULL,
+                  choices = discDists$distribution,
+                  selected = discDists$distribution
                 )
-              )),
-
-              fluidRow(
-                tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
-                column(
-                  8,
-                  uiOutput("answerbox"),
-                  selectInput("answer", "", c("Select Distribution"),
-                    width =
-                      "100%"
-                  )
-                ),
-                br(),
-                column(1, uiOutput("mark")),
-                column(
-                  3,
-                  bsButton(
-                    "submit",
-                    "Submit",
-                    size = "large",
-                    style = "warning",
-                    disabled = FALSE
-                  )
-                ),
-                br(),
-                br(),
-                br(),
-
-                column(
-                  4,
-                  bsButton(
-                    "nextq",
-                    "Next Question",
-                    size = "large",
-                    style = "success",
-                    disabled = TRUE
-                  )
-                ),
-                column(
-                  4,
-                  bsButton(
-                    "restart",
-                    "Restart the game",
-                    size = "large",
-                    style = "warning",
-                    disabled = FALSE
-                  )
-                ),
-                br(),
-                br(),
-                br(),
-                uiOutput("test1"),
-                uiOutput("test2")
               )
             ),
-            wellPanel(
-              style = "background-color: #EAF2F8",
-              fluidRow(column(
-                width = 12,
-                uiOutput("feedback")
-              ))
+            column(
+              width = 4,
+              offset = 1,
+              dropdownButton(
+                inputId = "continousDrop",
+                label = "Continuous distributions",
+                circle = FALSE,
+                status = "default",
+                size = "lg",
+                bsButton(
+                  inputId = "selectAllC",
+                  label = "Unselect all",
+                  size = "medium"
+                ),
+                checkboxGroupInput(
+                  inputId = "continuousList",
+                  label = NULL,
+                  choices = contDists$distribution,
+                  selected = contDists$distribution
+                )
+              )
             ),
-
-
-            br(),
-            br(),
-            br(),
-
-            tags$head(tags$style(
-              HTML("#result {font-size: 17px;background-color:#EAF2F8}")
-            )),
-            width = 6
+            column(
+              width = 2,
+              offset = 1,
+              bsButton(
+                inputId = "filter",
+                label = "Filter",
+                size = "large",
+                style = "success",
+                disabled = FALSE
+              )
+            )
           ),
-          mainPanel(
-            width = 6,
-
-            fluidRow(uiOutput("correct", align = "center")),
-            fluidRow(uiOutput("distPlot", align = "center")),
-            br(),
-            br(),
-            br()
+          br(),
+          ### Main display area ----
+          fluidRow(
+            column(
+              width = 5,
+              wellPanel(
+                h3("Context"),
+                uiOutput("context"),
+                bsButton(
+                  inputId = "hint",
+                  label = "Hint",
+                  icon = icon("question"),
+                  size = "default",
+                  disabled = TRUE,
+                  style = "default"
+                ),
+                selectInput(
+                  inputId = "answer",
+                  label = "Select your answer",
+                  choices = c("Select distributions and filter first")
+                ),
+                tagList(
+                  uiOutput("mark"),
+                  uiOutput("feedback"),
+                ),
+                bsButton(
+                  inputId = "submit",
+                  label = "Submit",
+                  size = "large",
+                  style = "warning",
+                  disabled = TRUE
+                ),
+                br(),
+                bsButton(
+                  inputId = "nextQ",
+                  label = "Next question",
+                  size = "large",
+                  style = "success",
+                  disabled = TRUE
+                ),
+                br(),
+                bsButton(
+                  inputId = "restart",
+                  label = "Restart the game",
+                  size = "large",
+                  style = "danger",
+                  disabled = FALSE
+                )
+              )
+            ),
+            column(
+              width = 7,
+              uiOutput("correctCount", align = "center"),
+              uiOutput("gameProgress", align = "center")
+            )
           ),
-          position = "left"
+          ## MathJax Re-triggers  ----
+          uiOutput("math1"),
+          uiOutput("math2")
+        ),
+        ## References Tab ----
+        tabItem(
+          tabName = "references",
+          h2("References")
         )
       )
     )
   )
 )
 
+# Define the server ----
 server <- function(session, input, output) {
-
-  # Learning Locker Statement Generation
+  ## Learning Locker Statement Generation ----
   .generateStatement <- function(session, verb = NA, object = NA, description = NA, value = NA) {
     if (is.na(object)) {
       object <- paste0("#shiny-tab-", session$input$tabs)
@@ -360,403 +314,439 @@ server <- function(session, input, output) {
     return(rlocker::store(session, statement))
   }
 
+  ## Initialize Variables ----
+  score <- reactiveVal(0)
+  mistakes <- reactiveVal(0)
+  rowNum <- reactiveVal(0)
+  gameOver <- FALSE
+  #hint <- c()
+  #correct_answer <- c()
+
+  ## Define buttons ----
+  #### Info button ----
   observeEvent(input$info, {
     sendSweetAlert(
       session = session,
-      title = "Instructions:",
-      text = "In this app the user is challenged to identify the probability model for various contextual situations.",
+      title = "Instructions",
+      text = tags$ol(
+        tags$li("Select which Discrete/Continuous distributions you want to
+                review and press the Filter button."),
+        tags$li("Read the context and select which distribution you believe
+                   correctly describes the long-run behavior in the context.")
+      ),
       type = "info"
     )
   })
 
+  ### Go button ----
   observeEvent(input$go, {
-    updateTabItems(session, "tabs", "matchingdist")
-    updateButton(session, "submit", disabled = TRUE)
+    updateTabItems(
+      session = session,
+      inputId = "tabs",
+      selected = "matchingDist")
+    value$index <<- 1
+    value$answerbox <<- value$index
   })
 
-  observeEvent(input$submit, {
-    updateButton(session, "nextq", disabled = FALSE)
-  })
-
-  observeEvent(input$submit, {
-    updateButton(session, "submit", disabled = TRUE)
-  })
-
-  observeEvent(input$nextq, {
-    updateButton(session, "submit", disabled = FALSE)
-    updateButton(session, "nextq", disabled = TRUE)
-  })
-
-  observeEvent(input$restart, {
-    updateButton(session, "submit", disabled = TRUE)
-    updateButton(session, "restart", disabled = FALSE)
-    updateButton(session, "filter", disabled = FALSE)
-
-    GAME_OVER <<- FALSE
-    .generateStatement(session, object = "restart", verb = "interacted", description = "Game has been restarted.")
-
-    output$question <- renderUI({
-      withMathJax()
-      return(NULL)
-      output$test1 <- renderUI({
-        withMathJax()
-      })
-      output$test2 <- renderUI({
-        withMathJax()
-      })
-    })
-
-    output$feedback <- renderUI({
-      withMathJax()
-      return(NULL)
-      output$test1 <- renderUI({
-        withMathJax()
-      })
-      output$test2 <- renderUI({
-        withMathJax()
-      })
-    })
-    observeEvent(input$hint, {
-      p("Please select the distribution")
-    })
-
-    updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
-    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"), selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"))
-
-    updateButton(session, "selectAllD", label = "Unselect")
-    updateButton(session, "selectAllC", label = "Unselect")
-    updateCheckboxGroupInput(session, inputId = "discretelist", label = NULL, choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
-    updateCheckboxGroupInput(session, inputId = "continuouslist", label = NULL, choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"), selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"))
-
-    updateSelectInput(session, "answer", "", c("Select Distribution"))
-
-    output$mark <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    id <<- 0
-    numberRow <<- numeric()
-    value[["mistake"]] <<- 0
-    # print(value[["mistake"]])
-    value$correct <<- 0
-  })
-
-  output$result <- renderUI({
-    withMathJax()
-    p("Choose the distribution from the list to match the given text, then click 'Submit' to check your answer.")
-  })
-
-  value <- reactiveValues(index = 1, mistake = 0, correct = 0)
-  correct_answer <- as.matrix(bank[1:91, 4])
-  hint <- as.matrix(bank[1:91, 6])
-  index_list <- reactiveValues(list = sample(2:91, 89, replace = FALSE))
-  feedbacks <- as.matrix(bank[1:91, 7])
-
-  observeEvent(input$go, {
-    value$index <- 1
-    value$answerbox <- value$index
-  })
-
-  output$correct <- renderUI({
-    withMathJax()
-    h3("Number of correct answers:", "", value$correct)
-  })
-
-  ####### select AllDiscrete#####
+  ### Select/Unselect All-Discrete button----
   observeEvent(input$selectAllD, {
-    if (input$selectAllD == 0) {
-      updateButton(session, "selectAllD", label = "Unselect")
-      updateCheckboxGroupInput(session, "discretelist", choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
-    }
-    else if (input$selectAllD %% 2 == 1) {
-      updateButton(session, "selectAllD", label = "Select All")
-      updateCheckboxGroupInput(session, "discretelist", choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
-    }
-    else {
-      updateButton(session, "selectAllD", label = "Unselect")
-      updateCheckboxGroupInput(session, "discretelist", choices = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"), selected = c("Bernoulli", "Binomial", "Discrete Uniform", "Poisson", "Geometric", "Negative Binomial"))
-    }
-  })
-  ####### select AllContinuous#####
-  observeEvent(input$selectAllC, {
-    if (input$selectAllC == 0) {
-      updateButton(session, "selectAllC", label = "Unselect")
-      updateCheckboxGroupInput(session, "continuouslist", choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"), selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"))
-    }
-    else if (input$selectAllC %% 2 == 1) {
-      updateButton(session, "selectAllC", label = "Select All")
-      updateCheckboxGroupInput(session, "continuouslist", choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"))
-    }
-    else {
-      updateButton(session, "selectAllC", label = "Unselect")
-      updateCheckboxGroupInput(session, "continuouslist", choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"), selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"))
-    }
-  })
-
-  ######## Mixture of Dropdown and Checkbox########
-
-  # TO DO: revise this code so that it is NOT hard coded, but rather makes use columns in the data frame.
-  observeEvent(input$filter, {
-    discretechosen <- input$discretelist
-    continuouschosen <- input$continuouslist
-    distributionchosen <<- c(discretechosen, continuouschosen)
-
-    .generateStatement(session, object = "filter", verb = "interacted", description = "Please select the distributions you'd like to use in this app and click Filter", value = paste(distributionchosen, sep = ", ", collapse = ", "))
-
-    numberRow <- numeric()
-    # numberRow <- dplyr::filter(bank, bank$distribution %in% distributionchosen)
-    if ("Bernoulli" %in% distributionchosen) {
-      numberRow <- c(numberRow, 1:6)
-    }
-    if ("Beta" %in% distributionchosen) {
-      numberRow <- c(numberRow, 7:10)
-    }
-    if ("Binomial" %in% distributionchosen) {
-      numberRow <- c(numberRow, 11:20)
-    }
-    if ("Continuous Uniform" %in% distributionchosen) {
-      numberRow <- c(numberRow, 21:29)
-    }
-    if ("Discrete Uniform" %in% distributionchosen) {
-      numberRow <- c(numberRow, 30:34)
-    }
-    if ("Exponential" %in% distributionchosen) {
-      numberRow <- c(numberRow, 35:42)
-    }
-    if ("Gamma" %in% distributionchosen) {
-      numberRow <- c(numberRow, 43:49)
-    }
-    if ("Geometric" %in% distributionchosen) {
-      numberRow <- c(numberRow, 50:56)
-    }
-    if ("Hypergeometric" %in% distributionchosen) {
-      numberRow <- c(numberRow, 57:60)
-    }
-    if ("Negative Binomial" %in% distributionchosen) {
-      numberRow <- c(numberRow, 61:68)
-    }
-    if ("Normal" %in% distributionchosen) {
-      numberRow <- c(numberRow, 69:80)
-    }
-    if ("Poisson" %in% distributionchosen) {
-      numberRow <- c(numberRow, 81:90)
-    }
-    numberRow <<- numberRow
-    updateButton(session, "submit", disabled = FALSE)
-    # print(numberRow)
-    ### Select questions from edited databank###
-    output$question <- renderUI({
-      withMathJax()
-      id <<- sample(numberRow, 1, replace = FALSE, prob = NULL)
-      updateSelectInput(session, "answer",
-        label = NULL, choices = c("Select distribution", distributionchosen),
-        selected = NULL
+    if (input$selectAllD %% 2 == 0) {
+      updateButton(
+        session = session,
+        inputId = "selectAllD",
+        label = "Unselect all")
+      updateCheckboxGroupInput(
+        session = session,
+        inputId = "discreteList",
+        selected = discDists$distribution
       )
-      output$mark <- renderUI({
-        img(src = NULL, width = 30)
-      })
-      # print(id)
-      numberRow <<- numberRow[!numberRow %in% id]
-      # print(numberRow)
-      return(p(bank[id, 3]))
-    })
-    output$test1 <- renderUI({
-      withMathJax()
-    })
-    output$test2 <- renderUI({
-      withMathJax()
-    })
+    }
+    else {
+      updateButton(
+        session = session,
+        inputId = "selectAllD",
+        label = "Select all")
+      updateCheckboxGroupInput(
+        session = session,
+        inputId = "discreteList",
+        choices = discDists$distribution
+      )
+    }
   })
 
-  ### PRINT HINT ####
+  ### Select/Unselect All-Conintuous button----
+  observeEvent(input$selectAllC, {
+    if (input$selectAllC %% 2  == 0) {
+      updateButton(
+        session = session,
+        inputId = "selectAllC",
+        label = "Unselect all")
+      updateCheckboxGroupInput(
+        session = session,
+        inputId = "continuousList",
+        selected = contDists$distribution
+      )
+    }
+    else {
+      updateButton(
+        session = session,
+        inputId = "selectAllC",
+        label = "Select all")
+      updateCheckboxGroupInput(
+        session = session,
+        inputId = "continuousList",
+        choices = contDists$distribution
+      )
+    }
+  })
+
+  ### Filter button ----
+  observeEvent(input$filter, {
+    discreteChosen <- input$discreteList
+    continouousChosen <- input$continuousList
+    distributionChosen <- sort(c(discreteChosen, continouousChosen))
+
+    #### Error Check-No Distributions Chosen ----
+    if(is.null(distributionChosen)){
+      sendSweetAlert(
+        session = session,
+        title = "ERROR",
+        text = "You've not selected any distributions to review. Please select
+        at least one distribution.",
+        type = "error"
+      )
+    } else {
+      .generateStatement(session, object = "filter", verb = "interacted", description = "Please select the distributions you'd like to use in this app and click Filter", value = paste(distributionChosen, sep = ", ", collapse = ", "))
+
+      #### Filter Question Bank ----
+      questionBank <- questionBank %>%
+        filter(distribution %in% distributionChosen)
+      numberRow <- nrow(questionBank)
+
+      #### Arrange Question Bank ----
+      if (length(distributionChosen) > 1 ){
+        shufDist <- sample(
+          x = questionBank$distribution,
+          size = numberRow,
+          replace = FALSE)
+      }
+
+
+      #### Update rowNum ----
+      rowNum(1)
+
+      #### Disable Filter button ----
+      updateButton(
+        session = session,
+        inputId = "filter",
+        disabled = TRUE
+      )
+
+      #### Update Various Buttons ----
+      updateButton(
+        session = session,
+        inputId = "hint",
+        disabled = FALSE
+      )
+      updateButton(
+        session = session,
+        inputId = "submit",
+        disabled = FALSE
+      )
+      updateSelectInput(
+        session = session,
+        inputId = "answer",
+        choices = c("Select distribution", distributionChosen)
+      )
+    }
+  })
+
+  ### Hint button ----
   observeEvent(input$hint, {
     sendSweetAlert(
       session = session,
-      title = "Hint:",
-      closeOnClickOutside = TRUE,
-      p(bank[id, 6])
+      title = "Hint",
+      text = p(questionBank[rowNum(), "hint"]),
+      type = "info"
     )
-    .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", value = bank[id, 6])
+    .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", value = questionBank[rowNum(), "hint"])
   })
 
-  ### SUBMIT BUTTON###
+  ### Submit button ----
   observeEvent(input$submit, {
-    output$mark <- renderUI({
-      if (!is.null(input$answer)) {
-        correct_answer <<- bank[id, 4]
-        success <- input$answer == correct_answer
-        if (success) {
-          img(src = "check.png", width = 30)
-        } else {
-          img(src = "cross.png", width = 30)
-        }
+    updateButton(
+      session = session,
+      inputId = "nextQ",
+      disabled = FALSE
+    )
+    updateButton(
+      session = session,
+      inputId = "submit",
+      disabled = TRUE
+    )
+    if (!is.null(input$answer)) {
+      if (input$answer == questionBank[rowNum(), "distribution"]) {
+        score(score() + 1)
+        output$mark <- renderUI({
+          img(src = "check.png", width = 30, alt = "Correct")
+        })
+        output$feedback <- renderUI({
+          p(paste("Correct;", questionBank[rowNum(), "feedback"]))
+        })
+      } else {
+        mistakes(mistakes() + 1)
+        output$mark <- renderUI({
+          img(src = "cross.png", width = 30, alt = "Incorrect")
+        })
+        output$feedback <- renderUI({
+          p(paste("Incorrect;", questionBank[rowNum(), "feedback"]))
+        })
       }
-    })
+    }
   })
 
-  ### NEXT QUESTION BUTTON###
-  observeEvent(input$nextq, {
-    if (length(numberRow) == 1) {
+  ### Next question button ----
+  observeEvent(input$nextQ, {
+    updateButton(
+      session = session,
+      inputId = "submit",
+      disabled = FALSE)
+    updateButton(
+      session = session,
+      inputId = "nextQ",
+      disabled = TRUE)
+    updateSelectInput(
+      session = session,
+      inputId = "answer",
+      selected = "Select distribution"
+    )
+
+    if(rowNum() == numberRow && gameOver == FALSE){
       sendSweetAlert(
         session = session,
-        title = "Warning:",
-        # type = "error",
-        closeOnClickOutside = TRUE,
-        p("We have run out of questions. Please restart.")
+        title = "Out of Questions",
+        type = "warning",
+        text = paste("You have gone through all of the questions that we currently",
+                     "have for the distributions you selected. Please restart",
+                     "the game.")
       )
-      updateButton(session, "submit", disabled = TRUE)
-      updateButton(session, "nextq", disabled = TRUE)
-    }
-    else {
-      id <<- sample(numberRow, 1, replace = FALSE, prob = NULL)
-      # print(id)
-      hint <- bank[id, 6]
-      numberRow <<- numberRow[!numberRow %in% id]
-      # print(numberRow)
-      output$question <- renderUI({
-        withMathJax()
-        output$test1 <- renderUI({
-          withMathJax()
-        })
-        output$test2 <- renderUI({
-          withMathJax()
-        })
-        return(p(bank[id, 3]))
-      })
-      updateButton(session, "submit", disabled = FALSE)
-      updateSelectInput(session, "answer",
-        label = NULL, choices = c("Select distribution", distributionchosen),
-        selected = NULL
+      updateButton(
+        session = session,
+        inputId = "submit",
+        disabled = TRUE
       )
+      updateButton(
+        session = session,
+        inputId = "nextQ",
+        disabled = TRUE
+      )
+    } else {
+      rowNum(rowNum() + 1)
       output$mark <- renderUI({
         img(src = NULL, width = 30)
       })
-      ### FEEDBACK###
       output$feedback <- renderUI({
         return(NULL)
       })
-    }
-  })
-
-  observeEvent(input$submit, {
-    if (value[["mistake"]] == MAX_TRIES) {
-      updateButton(session, "nextq", disabled = TRUE)
-      output$result <- renderUI({
-        h3("You have lost this Game. You need to click 'restart' button to start this game from the beginning.")
-      })
-    }
-  })
-
-  ########### Counting Correct answers############
-  observeEvent(input$submit, {
-    if (!is.null(input$answer)) {
-      correct_answer <<- bank[id, 4]
-      success <- input$answer == correct_answer
-      WIN <- FALSE
-
-      if (success) {
-        value$correct <<- value$correct + 1
-        WIN <- value$correct == WIN_STATE
-        if (WIN) {
-          GAME_OVER <<- TRUE
-          sendSweetAlert(
-            session = session,
-            title = "Success:",
-            type = "success",
-            closeOnClickOutside = TRUE,
-            h4("Congrats! You Win! Please click Restart to start over.")
-          )
-
-          updateButton(session, "submit", disabled = TRUE)
-          updateButton(session, "nextq", disabled = TRUE)
-          updateButton(session, "restart", disabled = FALSE)
-        }
-      } else {
-        value[["mistake"]] <<- value[["mistake"]] + 1
-
-        if (value[["mistake"]] == MAX_TRIES) {
-          GAME_OVER <<- TRUE
-          WIN <- FALSE
-
-          updateButton(session, "submit", disabled = TRUE)
-          updateButton(session, "nextq", disabled = TRUE)
-          updateButton(session, "restart", disabled = FALSE)
-          updateButton(session, "filter", disabled = TRUE)
-
-          sendSweetAlert(
-            session = session,
-            title = "Lost:",
-            type = "error",
-            closeOnClickOutside = TRUE,
-            h4("You  have lost. Please click Restart to start over.")
-          )
-        }
-      }
-
-      .generateAnsweredStatement(
-        session,
-        object = "submit",
-        verb = "answered",
-        description = bank[id, 3],
-        response = input$answer,
-        interactionType = "choice",
-        success = success,
-        completion = GAME_OVER
+      output$math1 <- renderUI(
+        withMathJax()
       )
-
-      if (GAME_OVER) {
-        if (WIN) {
-          .generateStatement(session, object = "game", verb = "completed", description = "Player has won the game.")
-        } else {
-          .generateStatement(session, object = "game", verb = "completed", description = "Player has lost the game.")
-        }
-      }
-
-
-      ### FEEDBACK###
-      output$feedback <- renderUI({
-        correct_answer <<- bank[id, 4]
-        if (input$answer == correct_answer) {
-          p("CORRECT!", br(), bank[id, 7])
-        }
-        else {
-          p(strong("Hint:"), br(), bank[id, 6])
-        }
-        # withMathJax()
-        # h4(strong('Feedback',br(),bank[id,7]))
-      })
-
-      output$result <- renderUI({
-        h3("Congratulations! You got this one correct. Click 'Next Question' to move on your challenge.")
-      })
+      output$math2 <- renderUI(
+        withMathJax()
+      )
     }
   })
 
-  ##### Draw the Hangman Game#####
+  ### Restart button ----
+  observeEvent(input$restart, {
+    #### Update buttons and inputs ----
+    updateButton(
+      session = session,
+      inputId = "submit",
+      disabled = TRUE)
+    updateButton(
+      session = session,
+      inputId = "hint",
+      disabled = TRUE
+    )
+    updateCheckboxGroupInput(
+      session = session,
+      inputId = "discreteList",
+      selected = discDists$distribution)
+    updateCheckboxGroupInput(
+      session = session,
+      inputId = "continuousList",
+      selected = contDists$distribution)
+    updateButton(
+      session = session,
+      inputId = "selectAllD",
+      label = "Unselect all")
+    updateButton(
+      session = session,
+      inputId = "selectAllC",
+      label = "Unselect all")
+    updateSelectInput(
+      session = session,
+      inputId = "answer",
+      choices = c("Select distributions and filter first"))
+    updateButton(
+      session = session,
+      inputId = "filter",
+      disabled = FALSE
+    )
 
-  output$distPlot <- renderUI({
-    if (value[["mistake"]] == 0) {
-      img(src = "Cell01.jpg")
-    }
+    #### Clear outputs ----
+    output$question <- renderUI({
+      return(NULL)
+    })
+    output$feedback <- renderUI({
+      return(NULL)
+    })
+    output$mark <- renderUI({
+      img(src = NULL, width = 30)
+    })
 
-    else if (value[["mistake"]] == 1) {
-      img(src = "Cell02.jpg")
-    }
+    #### Reset variables ----
+    ##### Bob, depreciated variables are marked, delete once you've found the alt
+    score(0)
+    mistakes(0)
+    rowNum(0)
+    gameOver <- FALSE
+    id <- 0 ## Depreciated, use rowNum() for question presentation order
+            ## Use questionBank[rowNum(), "problemID"] for universal question ID
+    numberRow <- 0
+    value[["mistake"]] <<- 0  ## Depreciated, use mistakes()
+    value$correct <<- 0 ## Depreciated, use score()
 
-    else if (value[["mistake"]] == 2) {
-      img(src = "Cell03.jpg")
-    }
+    #### RLocker Statement ----
+    .generateStatement(session, object = "restart", verb = "interacted", description = "Game has been restarted.")
+  })
 
-    else if (value[["mistake"]] == 3) {
-      img(src = "Cell04.jpg")
-    }
+  ## Bob, I'm not sure the next five lines are yours or if they are leftovers from
+  ## somewhere. My code does NOT use them. If they aren't yours, delete.
+  ## If they are yours, update
+  value <<- reactiveValues(index = 1, mistake = 0, correct = 0)
+  correct_answer <- as.matrix(questionBank[1:91, 4])
+  hint <- as.matrix(questionBank[1:91, 6])
+  index_list <- reactiveValues(list = sample(2:91, 89, replace = FALSE))
+  feedbacks <- as.matrix(questionBank[1:91, 7])
 
-    else if (value[["mistake"]] == 4) {
-      img(src = "Cell05.jpg")
+  ## Render Count of Correct ----
+  output$correctCount <- renderUI({
+    p("Number of correct answers: ", paste0(score(),";"),
+      "Number of mistakes made: ", mistakes())
+  })
+
+  ## Render Context ----
+  output$context <- renderUI({
+
+    if(is.null(rowNum()) || rowNum() == 0){
+      NULL
+    } else {
+      withMathJax(p(questionBank[rowNum(), "context"]))
     }
-    else if (value[["mistake"]] == 5) {
-      img(src = "GAMEOVER.png")
+  })
+
+  ## Game Over Messages ----
+  observeEvent(mistakes(), {
+    if(mistakes() == maxTries){
+      gameOver <- TRUE
+      sendSweetAlert(
+        session = session,
+        title = "Lost",
+        type = "error",
+        text = "You have lost. Please click Restart to start over and try again."
+      )
+      updateButton(
+        session = session,
+        inputId = "submit",
+        disabled = TRUE
+      )
+      updateButton(
+        session = session,
+        inputId = "nextQ",
+        disabled = TRUE
+      )
+    }
+  })
+
+  observeEvent(score(), {
+    if(score() == winLimit){
+      gameOver <- TRUE
+      sendSweetAlert(
+        session = session,
+        title = "Winner!",
+        type = "success",
+        text = "You have won the game. Please click Restart to play again."
+      )
+      updateButton(
+        session = session,
+        inputId = "submit",
+        disabled = TRUE
+      )
+      updateButton(
+        session = session,
+        inputId = "nextQ",
+        disabled = TRUE
+      )
+    }
+  })
+
+  ## Bob, I removed the prior section that this was in; I'm not sure where you
+  ## want to put these calls
+      # .generateAnsweredStatement(
+      #   session,
+      #   object = "submit",
+      #   verb = "answered",
+      #   description = questionBank[id, "context"],
+      #   response = input$answer,
+      #   interactionType = "choice",
+      #   success = success,
+      #   completion = gameOver
+      # )
+      #
+      # if (gameOver) {
+      #   if (WIN) {
+      #     .generateStatement(session, object = "game", verb = "completed", description = "Player has won the game.")
+      #   } else {
+      #     .generateStatement(session, object = "game", verb = "completed", description = "Player has lost the game.")
+      #   }
+      # }
+
+  ## Display the pictures ----
+  output$gameProgress <- renderUI({
+    if (mistakes() == 0) {
+      img(
+        src = "Cell01.jpg",
+        width = "100%",
+        alt = "The man is on the top branch"
+      )
+    } else if (mistakes() == 1) {
+      img(
+        src = "Cell02.jpg",
+        width = "100%",
+        alt = "The man has fallen one branch"
+      )
+    } else if (mistakes() == 2) {
+      img(
+        src = "Cell03.jpg",
+        width = "100%",
+        alt = "The man has fallen another branch, only one remaining"
+      )
+    } else if (mistakes() == 3) {
+      img(
+        src = "Cell04.jpg",
+        width = "100%",
+        alt = "The man has fallen to the last branch"
+      )
+    } else if (mistakes() == 4) {
+      img(
+        src = "Cell05.jpg",
+        width = "100%",
+        alt = "The man has fallen to the ground"
+      )
     }
   })
 }
 
-boastApp(server = server, ui = ui)
+boastUtils::boastApp(server = server, ui = ui)
