@@ -20,43 +20,12 @@ maxTries <- 4
 winLimit <- 10
 
 # Read in Questions ----
-#!!
-#questionBank <- read.csv("questionBank.csv", stringsAsFactors = FALSE)
 qBank <- read.csv("questionBank.csv", stringsAsFactors = FALSE)
 ## Place all questions into a randomized but fixed order by distribution ----
 set.seed(2020)
-# questionBank <- questionBank %>%
-#   dplyr::group_by(distribution) %>% # The lifecycle message goes away without this line (either comes from here or comes from somewhere related )
-#                                     # IDK why though...and lifecycle::last_warnings() tells me NOTHING
-#                                     # Things NOT causing the problem: NAs
-#                                     # This literally doesn't even happen in r script or Markdown :(
-#                                     # Does not print until after Listening on... (i.e. all global variables run)
-#                                     # According to many google searches, I think that somewhere in the initial run, a table row gets called with greater number than it "should"
-#                                     # Why is this line here in the first place?? Why are we renumbering by type instead of overall?
-#   dplyr::slice_sample(prop = 1)
-# set.seed(NULL)
-# 
-# # Define lists of Discrete and Continuous distributions in question questionBank ----
-# discDists <- questionBank %>%
-#   dplyr::filter(type == "discrete") %>%
-#   dplyr::select(distribution) %>%
-#   dplyr::distinct(distribution) %>%
-#   dplyr::arrange(distribution)
-# 
-# contDists <- questionBank %>%
-#   dplyr::filter(type == "continuous") %>%
-#   dplyr::select(distribution) %>%
-#   dplyr::distinct(distribution) %>%
-#   dplyr::arrange(distribution)
 
+# Reorder the questions to give "random" order
 qBank <- qBank %>%
-  #dplyr::group_by(distribution) %>% # The lifecycle message goes away without this line (either comes from here or comes from somewhere related )
-  # IDK why though...and lifecycle::last_warnings() tells me NOTHING
-  # Things NOT causing the problem: NAs
-  # This literally doesn't even happen in r script or Markdown :(
-  # Does not print until after Listening on... (i.e. all global variables run)
-  # According to many google searches, I think that somewhere in the initial run, a table row gets called with greater number than it "should"
-  # Why is this line here in the first place?? Why are we renumbering by type instead of overall?
   dplyr::slice_sample(prop = 1)
 set.seed(NULL)
 
@@ -297,9 +266,6 @@ ui <- list(
 
 # Define the server ----
 server <- function(session, input, output) {
-  # !!
-  questionBank <- qBank
-  
   ## Learning Locker Statement Generation ----
   .generateStatement <- function(session, verb = NA, object = NA, description = NA, value = NA) {
     if (is.na(object)) {
@@ -353,7 +319,8 @@ server <- function(session, input, output) {
   mistakes <- reactiveVal(0)
   rowNum <- reactiveVal(0)
   gameOver <- FALSE
-  numberRow <- 0 # !! Added this one
+  numberRow <- 0 
+  questionBank <- qBank
   #hint <- c()
   #correct_answer <- c()
 
@@ -456,7 +423,6 @@ server <- function(session, input, output) {
       #### Filter Question Bank ----
       questionBank <<- questionBank %>%  
         filter(distribution %in% distributionChosen)
-      # As of right here, questionBank is filtered !!
       numberRow <<- nrow(questionBank)
       
       #### Arrange Question Bank ----
@@ -642,7 +608,7 @@ server <- function(session, input, output) {
       img(src = NULL, width = 30)
     })
     
-    questionBank <<- qBank # !!
+    questionBank <<- qBank 
 
     #### Reset variables ----
     ##### Bob, depreciated variables are marked, delete once you've found the alt
