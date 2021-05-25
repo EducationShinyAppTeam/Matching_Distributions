@@ -41,10 +41,11 @@ ui <- list(
     
     ### Create the sidebar/left navigation menu ----
     dashboardSidebar(sidebarMenu(
-      id = "tabs",
+      id = "pages",
       menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
       menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
-      menuItem("Challenge", tabName = "challenge", icon = icon("cogs"))
+      menuItem("Challenge", tabName = "challenge", icon = icon("cogs")), 
+      menuItem("References", tabName = "references", icon = icon("leanpub"))
       ),
       tags$div(
         class = "sidebar-logo",
@@ -454,12 +455,32 @@ ui <- list(
               br()
             ),
             position = "left"
+          ), 
+        ), 
+        
+        #### Set up the References Page ----
+        tabItem(
+          tabName = "references",
+          withMathJax(),
+          h2("References"),
+          p("You'll need to fill in this page with all of the appropriate
+            references for your app."),
+          p(
+            class = "hangingindent",
+            "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
+            (v0.61). [R package]. Available from
+            https://CRAN.R-project.org/package=shinyBS"
+          ),
+          br(),
+          br(),
+          br(),
+          boastUtils::copyrightInfo()  
           )
         )
       )
     )
   )
-)
+
 
 # Define server logic ----
 server <- function(session, input, output) {
@@ -467,7 +488,7 @@ server <- function(session, input, output) {
   # Learning Locker Statement Generation
   .generateStatement <- function(session, verb = NA, object = NA, description = NA, value = NA) {
     if (is.na(object)) {
-      object <- paste0("#shiny-tab-", session$input$tabs)
+      object <- paste0("#shiny-tab-", session$input$pages)
     } else {
       object <- paste0("#", object)
     }
@@ -525,7 +546,7 @@ server <- function(session, input, output) {
   observeEvent(input$go,{
     updateTabItems(
       session = session,
-      inputId = "tabs",
+      inputId = "pages",
       selected = "prerequisites")
   })
   
@@ -533,13 +554,13 @@ server <- function(session, input, output) {
   observeEvent(input$go2,{
     updateTabItems(
       session = session,
-      inputId = "tabs",
+      inputId = "pages",
       selected = "challenge")
   })
   
   #*Don't understand what this button is for??*
   observeEvent(input$go, {
-    #updateTabItems(session, "tabs", "challenge")
+    #updateTabItems(session, "pages", "challenge")
     updateButton(session, "submit", disabled = TRUE)
   })
 
