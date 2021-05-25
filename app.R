@@ -21,23 +21,29 @@ ui <- dashboardPage(
   dashboardHeader(
     title = "Matching Distributions",
     titleWidth = 300,
+    tags$li(class = "dropdown", actionLink("info", icon("info"))),
     tags$li(
       class = "dropdown",
-      tags$a(
-        href = "https://shinyapps.science.psu.edu/",
-        icon("home", lib = "font-awesome")
-      )
+      boastUtils::surveyLink(name = "Matching_Distributions")
     ),
     tags$li(
       class = "dropdown",
-      actionLink("info", icon("info"), class = "myClass")
+      tags$a(href = 'https://shinyapps.science.psu.edu/',
+             icon("home")
+      )
     )
   ),
   dashboardSidebar(sidebarMenu(
     id = "tabs",
     menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
+    menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
     menuItem("Challenge", tabName = "matchingdist", icon = icon("cogs"))
-  )),
+    ),
+    tags$div(
+      class = "sidebar-logo",
+      boastUtils::sidebarFooter()
+    )),
+  
   dashboardBody(
     withMathJax(),
     tags$head(
@@ -57,13 +63,10 @@ ui <- dashboardPage(
       # Overview Tab
       tabItem(
         tabName = "overview",
-        tags$a(href = "http://stat.psu.edu/", tags$img(
-          src = "logo.png", align = "left", width = 180
-        )),
         br(),
         br(),
         br(),
-        h3("About:"),
+        h3("Matching Distributions"),
         p(
           "In this App, you will gain practice at associating context with different probability distributions. "
         ),
@@ -93,7 +96,7 @@ ui <- dashboardPage(
           style = "text-align:center",
           actionButton(
             "go",
-            "G O !",
+            "GO !",
             icon("bolt"),
             size = "medium",
             style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
@@ -103,7 +106,7 @@ ui <- dashboardPage(
         br(),
         h3("Acknowledgements:"),
         p(
-          "This app was developed and coded by Zhiliang Zhang and futher updated by Yiyang Wang and Yuqing Lei."
+          "This app was developed and coded by Zhiliang Zhang and futher updated by Yiyang Wang, Yuqing Lei and Shravani Samala in 2021."
         )
       ),
 
