@@ -96,9 +96,9 @@ ui <- dashboardPage(
           style = "text-align:center",
           actionButton(
             "go",
-            "GO !",
+            "GO!",
             icon("bolt"),
-            size = "medium",
+            size = "large",
             style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
             class = "circle grow"
           )
