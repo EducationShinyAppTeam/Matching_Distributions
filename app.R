@@ -765,7 +765,8 @@ server <- function(session, input, output) {
       closeOnClickOutside = TRUE,
       p(bank[id, 6])
     )
-    .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", value = bank[id, 6])
+    .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", 
+        value = bank[id, 6])
   })
 
   ### SUBMIT BUTTON###
@@ -909,7 +910,7 @@ server <- function(session, input, output) {
           p("CORRECT!", br(), bank[id, 7])
         }
         else {
-          p(strong("Hint:"), br(), bank[id, 6])
+          p(strong("Answer:"), br(), bank[id, 4], br(), strong("Explanation:"), br(), bank[id, 7])
         }
         # withMathJax()
         # h4(strong('Feedback',br(),bank[id,7]))
