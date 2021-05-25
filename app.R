@@ -44,7 +44,7 @@ ui <- list(
       id = "tabs",
       menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
       menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
-      menuItem("Challenge", tabName = "matchingdist", icon = icon("cogs"))
+      menuItem("Challenge", tabName = "challenge", icon = icon("cogs"))
       ),
       tags$div(
         class = "sidebar-logo",
@@ -74,8 +74,8 @@ ui <- list(
           tabName = "overview",
           h3("Matching Distributions"),
           p(
-            "In this App, you will gain practice at associating context with different probability distributions. "
-          ),
+            "In this App, you will gain practice at associating context with 
+            different probability distributions. "),
           br(),
           h3("Instructions:"),
           tags$ul(
@@ -96,6 +96,9 @@ ui <- list(
             ),
             tags$li(
               "Once you click 'Submit', you cannot revise your answer. You can only click 'Next Question' to move on to your next challenge. "
+            ), 
+            tags$li(
+              "Before checking out the challenge page, be sure to review your knowledge on the prerequisites page!"
             )
           ),
           
@@ -104,7 +107,7 @@ ui <- list(
             style = "text-align:center",
             actionButton(
               inputId = "go",
-              label = "GO!",
+              label = "GO TO PREREQUISITES!",
               icon("bolt"),
               size = "large",
               style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
@@ -118,7 +121,74 @@ ui <- list(
           )
         ),
   
-        # Challenge Tab
+        #### Set up the Prerequisites Page ----
+        tabItem(
+          tabName = "prerequisites",
+          withMathJax(),
+          h2("Prerequisites"),
+          p("In order to get the most out of this app, please review the
+            following:"),
+          tags$ul(
+            tags$li("Learn the difference between discrete distributions and 
+                    continuous distributions."),
+            tags$li("Learn what types of situations each probability distribution
+                    is used for."),
+            tags$li("Review each distribution's parameters, pmf and/or cdf, mean, 
+                    variance, and moment-generating function."),
+            tags$li("Keep a look out for '*' that point out special/ extra topics!")
+          ),
+          
+          p("Notice the use of an unordered list; users can move through the
+            list any way they wish."),
+          box(
+            title = strong("Null Hypothesis Significance Tests (NHSTs)"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = TRUE,
+            width = '100%',
+            "In the Confirmatory Data Analysis tradition, null hypothesis
+            significance tests serve as a critical tool to confirm that a
+            particular theoretical model describes our data and to make a
+            generalization from our sample to the broader population
+            (i.e., make an inference). The null hypothesis often reflects the
+            simpler of two models (e.g., 'no statistical difference',
+            'there is an additive difference of 1', etc.) that we will use to
+            build a sampling distribution for our chosen estimator. These
+            methods let us test whether our sample data are consistent with this
+            simple model (null hypothesis)."
+          ),
+          box(
+            title = strong(tags$em("p"), "-values"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+            "The probability that our selected estimator takes on a value at
+            least as extreme as what we observed given our null hypothesis. If
+            we were to carry out our study infinitely many times and the null
+            hypothesis accurately modeled what we're studying, then we would
+            expect for our estimator to produce a value at least as extreme as
+            what we have seen 100*(p-value)% of the time. The larger the
+            p-value, the more often we would expect our estimator to take on a
+            value at least as extreme as what we've seen; the smaller, the less
+            often."
+          ), 
+          
+          ##### Go Button--location will depend on your goals ----
+          div(
+            style = "text-align:center",
+            actionButton(
+              inputId = "go2",
+              label = "GO TO CHALLENGE!",
+              icon("bolt"),
+              size = "large",
+              style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
+              class = "circle grow"
+            )
+          ),
+        ),
+        
+        #### Challenge Tab
         tabItem(
           tabName = "challenge",
           fluidRow(
@@ -380,8 +450,25 @@ server <- function(session, input, output) {
     )
   })
 
+  ## Go button overview to prerequisites----
+  observeEvent(input$go,{
+    updateTabItems(
+      session = session,
+      inputId = "tabs",
+      selected = "prerequisites")
+  })
+  
+  ## Go button prerequisites to challenge----
+  observeEvent(input$go2,{
+    updateTabItems(
+      session = session,
+      inputId = "tabs",
+      selected = "challenge")
+  })
+  
+  #*Don't understand what this button is for??*
   observeEvent(input$go, {
-    updateTabItems(session, "tabs", "challenge")
+    #updateTabItems(session, "tabs", "challenge")
     updateButton(session, "submit", disabled = TRUE)
   })
 
