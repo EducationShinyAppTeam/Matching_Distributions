@@ -95,8 +95,8 @@ ui <- dashboardPage(
         div(
           style = "text-align:center",
           actionButton(
-            "go",
-            "GO!",
+            inputId = "go",
+            label = "GO!",
             icon("bolt"),
             size = "large",
             style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
@@ -185,8 +185,8 @@ ui <- dashboardPage(
             2,
             offset = 1,
             bsButton(
-              "filter",
-              "Filter",
+              inputId = "filter",
+              label = "Filter",
               size = "large",
               style = "warning",
               disabled = FALSE
@@ -217,7 +217,7 @@ ui <- dashboardPage(
                   tags$li(
                     style = "display: inline-block;",
                     circleButton(
-                      "hint",
+                      inputId = "hint",
                       icon = icon("question"),
                       status = "myClass",
                       size = "xs"
@@ -241,8 +241,8 @@ ui <- dashboardPage(
                 column(
                   3,
                   bsButton(
-                    "submit",
-                    "Submit",
+                    inputId = "submit",
+                    label = "Submit",
                     size = "large",
                     style = "warning",
                     disabled = FALSE
@@ -255,8 +255,8 @@ ui <- dashboardPage(
                 column(
                   4,
                   bsButton(
-                    "nextq",
-                    "Next Question",
+                    inputId = "nextq",
+                    label = "Next Question",
                     size = "large",
                     style = "success",
                     disabled = TRUE
@@ -265,8 +265,8 @@ ui <- dashboardPage(
                 column(
                   4,
                   bsButton(
-                    "restart",
-                    "Restart the game",
+                    inputId = "restart",
+                    label = "Restart the game",
                     size = "large",
                     style = "warning",
                     disabled = FALSE
