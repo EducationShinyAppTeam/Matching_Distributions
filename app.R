@@ -10,309 +10,317 @@ MAX_TRIES <- 4
 WIN_STATE <- 10
 GAME_OVER <- FALSE
 
+# source("global.R")
 numberRow <- numeric()
 hint <- c()
 correct_answer <- c()
 bank <- read.csv("distributionG.csv")
 bank <- data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
 
-ui <- dashboardPage(
-  skin = "blue",
-  dashboardHeader(
-    title = "Matching Distributions",
-    titleWidth = 300,
-    tags$li(class = "dropdown", actionLink("info", icon("info"))),
-    tags$li(
-      class = "dropdown",
-      boastUtils::surveyLink(name = "Matching_Distributions")
-    ),
-    tags$li(
-      class = "dropdown",
-      tags$a(href = 'https://shinyapps.science.psu.edu/',
-             icon("home")
-      )
-    )
-  ),
-  dashboardSidebar(sidebarMenu(
-    id = "tabs",
-    menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
-    menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
-    menuItem("Challenge", tabName = "matchingdist", icon = icon("cogs"))
-    ),
-    tags$div(
-      class = "sidebar-logo",
-      boastUtils::sidebarFooter()
-    )),
-  
-  dashboardBody(
-    withMathJax(),
-    tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css"),
-      tags$style(
-        HTML(
-          ".popover-title{
-                          color:black;
-                          font-size:18px;
-                          background-color: white;
-                          }"
+# Define UI for App ----
+ui <- list(
+  ## Create the app page ----
+  dashboardPage(
+    skin = "blue",
+    ### Create the app header ----
+    dashboardHeader(
+      title = "Matching Distributions",
+      titleWidth = 300,
+      tags$li(class = "dropdown", actionLink("info", icon("info"))),
+      tags$li(
+        class = "dropdown",
+        boastUtils::surveyLink(name = "Matching_Distributions")
+      ),
+      tags$li(
+        class = "dropdown",
+        tags$a(href = 'https://shinyapps.science.psu.edu/',
+               icon("home")
         )
       )
     ),
-
-    tabItems(
-      # Overview Tab
-      tabItem(
-        tabName = "overview",
-        br(),
-        br(),
-        br(),
-        h3("Matching Distributions"),
-        p(
-          "In this App, you will gain practice at associating context with different probability distributions. "
-        ),
-        br(),
-        h3("Instructions:"),
-        tags$ul(
-          tags$li(
-            "You'll start this game with a little man on the top of a tree,  and you are trying to prevent his fall to the ground.  If you provide a wrong answer, he falls to a lower branch and eventually to the ground. If you get 10 questions correct before he falls to the ground, you have won the game and saved the little man!"
-          ),
-          tags$li(
-            "Please select which probability distribution(s) you 'd like to work on and hit the “filter” button."
-          ),
-          tags$li(
-            "Read the given text and choose a distribution from the dropdown menu. Make sure you understand the scenario."
-          ),
-          tags$li(
-            "If you need some extra help, click the 'hint' button (shown as a question mark symbol)."
-          ),
-          tags$li(
-            "After you select the distribution, click 'Submit' to check your answer. "
-          ),
-          tags$li(
-            "Once you click 'Submit', you cannot revise your answer. You can only click 'Next Question' to move on to your next challenge. "
+    
+    ### Create the sidebar/left navigation menu ----
+    dashboardSidebar(sidebarMenu(
+      id = "tabs",
+      menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
+      menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
+      menuItem("Challenge", tabName = "matchingdist", icon = icon("cogs"))
+      ),
+      tags$div(
+        class = "sidebar-logo",
+        boastUtils::sidebarFooter()
+      )),
+    
+    ### Create the content ----
+    dashboardBody(
+      withMathJax(),
+      tags$head(
+        tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css"),
+        tags$style(
+          HTML(
+            ".popover-title{
+                            color:black;
+                            font-size:18px;
+                            background-color: white;
+                            }"
           )
-        ),
-        div(
-          style = "text-align:center",
-          actionButton(
-            inputId = "go",
-            label = "GO!",
-            icon("bolt"),
-            size = "large",
-            style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
-            class = "circle grow"
-          )
-        ),
-        br(),
-        h3("Acknowledgements:"),
-        p(
-          "This app was developed and coded by Zhiliang Zhang and futher updated by Yiyang Wang, Yuqing Lei and Shravani Samala in 2021."
         )
       ),
-
-      # Challenge Tab
-      tabItem(
-        tabName = "matchingdist",
-        fluidRow(
-          column(
-            width = 6,
-            p("Please select the distributions you'd like to use in this app and click Filter")
+      
+      #### Set up the Overview Page ----
+      tabItems(
+        # Overview Tab
+        tabItem(
+          tabName = "overview",
+          h3("Matching Distributions"),
+          p(
+            "In this App, you will gain practice at associating context with different probability distributions. "
           ),
           br(),
-          br(),
-          br(),
-          column(
-            width = 2,
-            dropdownButton(
-              label = "Discrete distributions",
-              circle = FALSE,
-              status = "default",
-              width = "100%",
-              tags$div(
-                actionButton("selectAllD", "Unselect",
-                  size =
-                    "small"
-                ),
-                checkboxGroupInput(
-                  inputId = "discretelist",
-                  label = NULL,
-                  choices = c(
-                    "Bernoulli",
-                    "Binomial",
-                    "Discrete Uniform",
-                    "Poisson",
-                    "Geometric",
-                    "Negative Binomial"
-                  ),
-                  selected = c(
-                    "Bernoulli",
-                    "Binomial",
-                    "Discrete Uniform",
-                    "Poisson",
-                    "Geometric",
-                    "Negative Binomial"
-                  )
-                )
-              )
+          h3("Instructions:"),
+          tags$ul(
+            tags$li(
+              "You'll start this game with a little man on the top of a tree,  and you are trying to prevent his fall to the ground.  If you provide a wrong answer, he falls to a lower branch and eventually to the ground. If you get 10 questions correct before he falls to the ground, you have won the game and saved the little man!"
             ),
-            verbatimTextOutput(outputId = "res1")
-          ),
-
-          column(
-            width = 2,
-            dropdownButton(
-              label = "Continuous distributions",
-              circle = FALSE,
-              status = "default",
-              width = "100%",
-              # tags$label("Pick which continuous distribution(s) to use in the app:"),
-              tags$div(
-                actionButton("selectAllC", "Unselect",
-                  size =
-                    "small"
-                ),
-                checkboxGroupInput(
-                  inputId = "continuouslist",
-                  label = NULL,
-                  choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"),
-                  selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"),
-                )
-              )
+            tags$li(
+              "Please select which probability distribution(s) you 'd like to work on and hit the “filter” button."
             ),
-            verbatimTextOutput(outputId = "res2")
-          ),
-          column(
-            2,
-            offset = 1,
-            bsButton(
-              inputId = "filter",
-              label = "Filter",
-              size = "large",
-              style = "warning",
-              disabled = FALSE
+            tags$li(
+              "Read the given text and choose a distribution from the dropdown menu. Make sure you understand the scenario."
+            ),
+            tags$li(
+              "If you need some extra help, click the 'hint' button (shown as a question mark symbol)."
+            ),
+            tags$li(
+              "After you select the distribution, click 'Submit' to check your answer. "
+            ),
+            tags$li(
+              "Once you click 'Submit', you cannot revise your answer. You can only click 'Next Question' to move on to your next challenge. "
             )
+          ),
+          
+          ##### Go Button--location will depend on your goals ----
+          div(
+            style = "text-align:center",
+            actionButton(
+              inputId = "go",
+              label = "GO!",
+              icon("bolt"),
+              size = "large",
+              style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
+              class = "circle grow"
+            )
+          ),
+          br(),
+          h3("Acknowledgements:"),
+          p(
+            "This app was developed and coded by Zhiliang Zhang and futher updated by Yiyang Wang, Yuqing Lei and Shravani Samala in 2021."
           )
         ),
-
-        titlePanel("Matching the text with the distribution"),
-        sidebarLayout(
-          sidebarPanel(
-            wellPanel(
-              style = "background-color: #EAF2F8",
-              withMathJax(uiOutput("question")),
-              tags$style(
-                type = "text/css",
-                "#question {font-size: 125%;background-color: #EAF2F8;color: black;}",
-                ".well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }"
-              )
+  
+        # Challenge Tab
+        tabItem(
+          tabName = "challenge",
+          fluidRow(
+            column(
+              width = 6,
+              p("Please select the distributions you'd like to use in this app and click Filter")
             ),
-
-            wellPanel(
-              style = "background-color: #EAF2F8",
-
-              fluidRow(column(
-                10,
-                p(
-                  "Identify the distribution of given text:",
-                  tags$li(
-                    style = "display: inline-block;",
-                    circleButton(
-                      inputId = "hint",
-                      icon = icon("question"),
-                      status = "myClass",
-                      size = "xs"
+            br(),
+            br(),
+            br(),
+            column(
+              width = 2,
+              dropdownButton(
+                label = "Discrete distributions",
+                circle = FALSE,
+                status = "default",
+                width = "100%",
+                tags$div(
+                  actionButton("selectAllD", "Unselect",
+                    size =
+                      "small"
+                  ),
+                  checkboxGroupInput(
+                    inputId = "discretelist",
+                    label = NULL,
+                    choices = c(
+                      "Bernoulli",
+                      "Binomial",
+                      "Discrete Uniform",
+                      "Poisson",
+                      "Geometric",
+                      "Negative Binomial"
+                    ),
+                    selected = c(
+                      "Bernoulli",
+                      "Binomial",
+                      "Discrete Uniform",
+                      "Poisson",
+                      "Geometric",
+                      "Negative Binomial"
                     )
                   )
                 )
-              )),
-
-              fluidRow(
-                tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
-                column(
-                  8,
-                  uiOutput("answerbox"),
-                  selectInput("answer", "", c("Select Distribution"),
-                    width =
-                      "100%"
+              ),
+              verbatimTextOutput(outputId = "res1")
+            ),
+  
+            column(
+              width = 2,
+              dropdownButton(
+                label = "Continuous distributions",
+                circle = FALSE,
+                status = "default",
+                width = "100%",
+                # tags$label("Pick which continuous distribution(s) to use in the app:"),
+                tags$div(
+                  actionButton("selectAllC", "Unselect",
+                    size =
+                      "small"
+                  ),
+                  checkboxGroupInput(
+                    inputId = "continuouslist",
+                    label = NULL,
+                    choices = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"),
+                    selected = c("Continuous Uniform", "Gamma", "Exponential", "Normal", "Beta"),
                   )
-                ),
-                br(),
-                column(1, uiOutput("mark")),
-                column(
-                  3,
-                  bsButton(
-                    inputId = "submit",
-                    label = "Submit",
-                    size = "large",
-                    style = "warning",
-                    disabled = FALSE
-                  )
-                ),
-                br(),
-                br(),
-                br(),
-
-                column(
-                  4,
-                  bsButton(
-                    inputId = "nextq",
-                    label = "Next Question",
-                    size = "large",
-                    style = "success",
-                    disabled = TRUE
-                  )
-                ),
-                column(
-                  4,
-                  bsButton(
-                    inputId = "restart",
-                    label = "Restart the game",
-                    size = "large",
-                    style = "warning",
-                    disabled = FALSE
-                  )
-                ),
-                br(),
-                br(),
-                br(),
-                uiOutput("test1"),
-                uiOutput("test2")
+                )
+              ),
+              verbatimTextOutput(outputId = "res2")
+            ),
+            column(
+              2,
+              offset = 1,
+              bsButton(
+                inputId = "filter",
+                label = "Filter",
+                size = "large",
+                style = "warning",
+                disabled = FALSE
               )
-            ),
-            wellPanel(
-              style = "background-color: #EAF2F8",
-              fluidRow(column(
-                width = 12,
-                uiOutput("feedback")
-              ))
-            ),
-
-
-            br(),
-            br(),
-            br(),
-
-            tags$head(tags$style(
-              HTML("#result {font-size: 17px;background-color:#EAF2F8}")
-            )),
-            width = 6
+            )
           ),
-          mainPanel(
-            width = 6,
-
-            fluidRow(uiOutput("correct", align = "center")),
-            fluidRow(uiOutput("distPlot", align = "center")),
-            br(),
-            br(),
-            br()
-          ),
-          position = "left"
+  
+          titlePanel("Matching the text with the distribution"),
+          sidebarLayout(
+            sidebarPanel(
+              wellPanel(
+                style = "background-color: #EAF2F8",
+                withMathJax(uiOutput("question")),
+                tags$style(
+                  type = "text/css",
+                  "#question {font-size: 125%;background-color: #EAF2F8;color: black;}",
+                  ".well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }"
+                )
+              ),
+  
+              wellPanel(
+                style = "background-color: #EAF2F8",
+  
+                fluidRow(column(
+                  10,
+                  p(
+                    "Identify the distribution of given text:",
+                    tags$li(
+                      style = "display: inline-block;",
+                      circleButton(
+                        inputId = "hint",
+                        icon = icon("question"),
+                        status = "myClass",
+                        size = "xs"
+                      )
+                    )
+                  )
+                )),
+  
+                fluidRow(
+                  tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
+                  column(
+                    8,
+                    uiOutput("answerbox"),
+                    selectInput("answer", "", c("Select Distribution"),
+                      width =
+                        "100%"
+                    )
+                  ),
+                  br(),
+                  column(1, uiOutput("mark")),
+                  column(
+                    3,
+                    bsButton(
+                      inputId = "submit",
+                      label = "Submit",
+                      size = "large",
+                      style = "warning",
+                      disabled = FALSE
+                    )
+                  ),
+                  br(),
+                  br(),
+                  br(),
+  
+                  column(
+                    4,
+                    bsButton(
+                      inputId = "nextq",
+                      label = "Next Question",
+                      size = "large",
+                      style = "success",
+                      disabled = TRUE
+                    )
+                  ),
+                  column(
+                    4,
+                    bsButton(
+                      inputId = "restart",
+                      label = "Restart the game",
+                      size = "large",
+                      style = "warning",
+                      disabled = FALSE
+                    )
+                  ),
+                  br(),
+                  br(),
+                  br(),
+                  uiOutput("test1"),
+                  uiOutput("test2")
+                )
+              ),
+              wellPanel(
+                style = "background-color: #EAF2F8",
+                fluidRow(column(
+                  width = 12,
+                  uiOutput("feedback")
+                ))
+              ),
+  
+  
+              br(),
+              br(),
+              br(),
+  
+              tags$head(tags$style(
+                HTML("#result {font-size: 17px;background-color:#EAF2F8}")
+              )),
+              width = 6
+            ),
+            mainPanel(
+              width = 6,
+  
+              fluidRow(uiOutput("correct", align = "center")),
+              fluidRow(uiOutput("distPlot", align = "center")),
+              br(),
+              br(),
+              br()
+            ),
+            position = "left"
+          )
         )
       )
     )
   )
 )
-
 server <- function(session, input, output) {
 
   # Learning Locker Statement Generation
@@ -373,7 +381,7 @@ server <- function(session, input, output) {
   })
 
   observeEvent(input$go, {
-    updateTabItems(session, "tabs", "matchingdist")
+    updateTabItems(session, "tabs", "challenge")
     updateButton(session, "submit", disabled = TRUE)
   })
 
