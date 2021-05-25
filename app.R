@@ -138,40 +138,109 @@ ui <- list(
             tags$li("Keep a look out for '*' that point out special/ extra topics!")
           ),
           
-          p("Notice the use of an unordered list; users can move through the
-            list any way they wish."),
+          tags$b("Discrete Distributions: "), 
+          br(), 
+          br(), 
+          
           box(
-            title = strong("Null Hypothesis Significance Tests (NHSTs)"),
+            title = strong("Bernoulli"),
             status = "primary",
             collapsible = TRUE,
             collapsed = TRUE,
             width = '100%',
-            "In the Confirmatory Data Analysis tradition, null hypothesis
-            significance tests serve as a critical tool to confirm that a
-            particular theoretical model describes our data and to make a
-            generalization from our sample to the broader population
-            (i.e., make an inference). The null hypothesis often reflects the
-            simpler of two models (e.g., 'no statistical difference',
-            'there is an additive difference of 1', etc.) that we will use to
-            build a sampling distribution for our chosen estimator. These
-            methods let us test whether our sample data are consistent with this
-            simple model (null hypothesis)."
+            
           ),
+          
           box(
-            title = strong(tags$em("p"), "-values"),
+            title = strong("Binomial"),
             status = "primary",
             collapsible = TRUE,
             collapsed = FALSE,
             width = '100%',
-            "The probability that our selected estimator takes on a value at
-            least as extreme as what we observed given our null hypothesis. If
-            we were to carry out our study infinitely many times and the null
-            hypothesis accurately modeled what we're studying, then we would
-            expect for our estimator to produce a value at least as extreme as
-            what we have seen 100*(p-value)% of the time. The larger the
-            p-value, the more often we would expect our estimator to take on a
-            value at least as extreme as what we've seen; the smaller, the less
-            often."
+          ), 
+          
+          box(
+            title = strong("Discrete Uniform"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Geometric"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Hypergeometric"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Negativebinomial"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Poisson"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          tags$b("Continuous Distributions: "), 
+          br(), 
+          br(), 
+          
+          box(
+            title = strong("Beta"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Continuous Uniform"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Exponential"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Gamma"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
+          ), 
+          
+          box(
+            title = strong("Normal"),
+            status = "primary",
+            collapsible = TRUE,
+            collapsed = FALSE,
+            width = '100%',
           ), 
           
           ##### Go Button--location will depend on your goals ----
@@ -391,6 +460,8 @@ ui <- list(
     )
   )
 )
+
+# Define server logic ----
 server <- function(session, input, output) {
 
   # Learning Locker Statement Generation
