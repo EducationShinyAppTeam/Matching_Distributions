@@ -134,21 +134,19 @@ ui <- list(
                     continuous distributions."),
             tags$li("Learn what types of situations each probability distribution
                     is used for."),
-            tags$li("Review each distribution's parameters, pmf and/or cdf, mean, 
-                    variance, and moment-generating function in the Probability 
-                    Applications app (the next one)!"),
-            tags$li("Keep a look out for '*' that point out special/ extra topics!"),
-            
             tags$li(
               "Review each distribution's parameters, pmf and/or cdf, mean, 
                     variance, and moment-generating function in the ",
               tags$a(
                 href = "https://psu-eberly.shinyapps.io/probability_applications/",
-                "Probability Applications", class = "bodylinks"), "app's prerequisite page!",
-            )
+                "Probability Applications", class = "bodylinks"), "app's prerequisite page!"),
+            tags$li("Keep a look out for '*' that point out special/ extra topics!")
           ),
           
-          tags$b("Discrete Distributions: "), 
+          tags$b("Discrete Distributions: "), "Data can only take on certain values 
+                                                such as integers. A probabilities can
+                                                be assigned to each of the values in the 
+                                                distribution", 
           br(), 
           br(), 
           
@@ -167,6 +165,10 @@ ui <- list(
             collapsible = TRUE,
             collapsed = FALSE,
             width = '100%',
+            tags$li("Fixed number of trials"),
+            tags$li("Independent trials"), 
+            tags$li("Trail can be success or failure"),
+            tags$li("Probability of success/ failure is te same for each trial")
           ), 
           
           box(
@@ -183,6 +185,8 @@ ui <- list(
             collapsible = TRUE,
             collapsed = FALSE,
             width = '100%',
+            tags$li("Number of trails on which first success occurs"),
+            tags$li("OR number of failures until first success")
           ), 
           
           box(
@@ -194,11 +198,15 @@ ui <- list(
           ), 
           
           box(
-            title = strong("Negativebinomial"),
+            title = strong("Negative Binomial"),
             status = "primary",
             collapsible = TRUE,
             collapsed = FALSE,
             width = '100%',
+            tags$li("Perform trails until rth success"), 
+            tags$li("Independent trails"), 
+            tags$li("Each trail results in success or failure"), 
+            tags$li("Probability of success same for each trail")
           ), 
           
           box(
@@ -207,9 +215,16 @@ ui <- list(
             collapsible = TRUE,
             collapsed = FALSE,
             width = '100%',
+            tags$li("Events are independent"), 
+            tags$li("Occurs at constant average rate"), 
+            tags$li("Two or more events can't happen at the same time")
           ), 
           
-          tags$b("Continuous Distributions: "), 
+          tags$b("Continuous Distributions: "), "Data can take on an infinite 
+                                                  number of values. So, one can 
+                                                  calculate the probability that  
+                                                  a value will fall in a certain 
+                                                  range.",
           br(), 
           br(), 
           
@@ -235,6 +250,8 @@ ui <- list(
             collapsible = TRUE,
             collapsed = FALSE,
             width = '100%',
+            tags$li("Occurences of events happen according to poisson process
+                    with rate \\(\\lambda\\)")
           ), 
           
           box(
@@ -243,6 +260,8 @@ ui <- list(
             collapsible = TRUE,
             collapsed = FALSE,
             width = '100%',
+            tags$li("Occurences of events happen according to poisson process with rate \\(\\lambda\\)"), 
+            tags$li("X is the waiting time until the \\(\\alpha\\) th occurence")
           ), 
           
           box(
