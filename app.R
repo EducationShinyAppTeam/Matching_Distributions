@@ -156,34 +156,41 @@ ui <- list(
             collapsible = TRUE,
             collapsed = TRUE,
             width = '100%',
-            
+            tags$li("Can take on two values, 1 or 0"), 
+            tags$li("If experiment with probability", tags$em("p"), "is a success, 
+                    the random variable takes on the value 1"), 
+            tags$li("Otherwise, it takes on the value 0 (failure"),
+            tags$li(tags$b("Example: "), "Does a single coin flip result in a head or tail?")
           ),
           
           box(
             title = strong("Binomial"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
             tags$li("Fixed number of trials"),
             tags$li("Independent trials"), 
             tags$li("Trail can be success or failure"),
-            tags$li("Probability of success/ failure is te same for each trial")
+            tags$li("Probability of success/ failure is te same for each trial"), 
+            tags$li(tags$b("Example: "), "Number of heads in ", tags$em("n"), "coin flips")
           ), 
           
           box(
             title = strong("Discrete Uniform"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
+            tags$li("Finite values"), 
+            tags$li("Probability of outcomes is equally likely")
           ), 
           
           box(
             title = strong("Geometric"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
             tags$li("Number of trails on which first success occurs"),
             tags$li("OR number of failures until first success")
@@ -193,15 +200,19 @@ ui <- list(
             title = strong("Hypergeometric"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
+            tags$li("Randomly select ", tags$em("n"), "items without replacement from ",
+                    tags$em("N"), "items"), 
+            tags$li("There are ", tags$em("m"), "of type 1 items and ", tags$em("N-m"), 
+                    "of type 2 items")
           ), 
           
           box(
             title = strong("Negative Binomial"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
             tags$li("Perform trails until rth success"), 
             tags$li("Independent trails"), 
@@ -213,7 +224,7 @@ ui <- list(
             title = strong("Poisson"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
             tags$li("Events are independent"), 
             tags$li("Occurs at constant average rate"), 
@@ -232,23 +243,26 @@ ui <- list(
             title = strong("Beta"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
+            
           ), 
           
           box(
             title = strong("Continuous Uniform"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
+            tags$li("Can take on an infinite number of values within a specified range"), 
+            tags$li("Each value of has an equal probabiliy ")
           ), 
           
           box(
             title = strong("Exponential"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
             tags$li("Occurences of events happen according to poisson process
                     with rate \\(\\lambda\\)")
@@ -258,7 +272,7 @@ ui <- list(
             title = strong("Gamma"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
             tags$li("Occurences of events happen according to poisson process with rate \\(\\lambda\\)"), 
             tags$li("X is the waiting time until the \\(\\alpha\\) th occurence")
@@ -268,8 +282,11 @@ ui <- list(
             title = strong("Normal"),
             status = "primary",
             collapsible = TRUE,
-            collapsed = FALSE,
+            collapsed = TRUE,
             width = '100%',
+            tags$li("Bell shaped curve"), 
+            tags$li("Mean, median, and mode are equal"), 
+            tags$li("Total area under curve is one")
           ), 
           
           ##### Go Button--location will depend on your goals ----
