@@ -135,8 +135,17 @@ ui <- list(
             tags$li("Learn what types of situations each probability distribution
                     is used for."),
             tags$li("Review each distribution's parameters, pmf and/or cdf, mean, 
-                    variance, and moment-generating function."),
-            tags$li("Keep a look out for '*' that point out special/ extra topics!")
+                    variance, and moment-generating function in the Probability 
+                    Applications app (the next one)!"),
+            tags$li("Keep a look out for '*' that point out special/ extra topics!"),
+            
+            tags$li(
+              "Review each distribution's parameters, pmf and/or cdf, mean, 
+                    variance, and moment-generating function in the ",
+              tags$a(
+                href = "https://psu-eberly.shinyapps.io/probability_applications/",
+                "Probability Applications", class = "bodylinks"), "app's prerequisite page!",
+            )
           ),
           
           tags$b("Discrete Distributions: "), 
