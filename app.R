@@ -173,7 +173,7 @@ ui <- list(
             tags$li("Independent trials"), 
             tags$li("Trail can be success or failure"),
             tags$li("Probability of success/ failure is te same for each trial"), 
-            tags$li(tags$b("Example: "), "Number of heads in ", tags$em("n"), "coin flips")
+            tags$li(tags$b("Example: "), "Number of heads in ", tags$em("n"), "coin flips.")
           ), 
           
           box(
@@ -183,7 +183,9 @@ ui <- list(
             collapsed = TRUE,
             width = '100%',
             tags$li("Finite values"), 
-            tags$li("Probability of outcomes is equally likely")
+            tags$li("Probability of outcomes is equally likely"),
+            tags$li(tags$b("Example: "), "The probability of rolling a three on a 
+                    six-sided die")
           ), 
           
           box(
@@ -193,7 +195,9 @@ ui <- list(
             collapsed = TRUE,
             width = '100%',
             tags$li("Number of trails on which first success occurs"),
-            tags$li("OR number of failures until first success")
+            tags$li("OR number of failures until first success"), 
+            tags$li(tags$b("Example: "), "Probability that you choose five hats
+                    before finding the first blue one.")
           ), 
           
           box(
@@ -205,7 +209,10 @@ ui <- list(
             tags$li("Randomly select ", tags$em("n"), "items without replacement from ",
                     tags$em("N"), "items"), 
             tags$li("There are ", tags$em("m"), "of type 1 items and ", tags$em("N-m"), 
-                    "of type 2 items")
+                    "of type 2 items"),
+            tags$li(tags$b("Example: "), "A bowl contains 30 red marbles and 60 black 
+                    marbles. You randomly choose 15 marbles from the bowl. What is the probability 
+                    that the number of blue marbles chose in the 15 marble sample is X.")
           ), 
           
           box(
@@ -217,7 +224,9 @@ ui <- list(
             tags$li("Perform trails until rth success"), 
             tags$li("Independent trails"), 
             tags$li("Each trail results in success or failure"), 
-            tags$li("Probability of success same for each trail")
+            tags$li("Probability of success same for each trail"), 
+            tags$li(tags$b("Example: "), "Probability that it takes you four trails
+                    to have 2 successes.")
           ), 
           
           box(
@@ -228,7 +237,11 @@ ui <- list(
             width = '100%',
             tags$li("Events are independent"), 
             tags$li("Occurs at constant average rate"), 
-            tags$li("Two or more events can't happen at the same time")
+            tags$li("Two or more events can't happen at the same time"), 
+            tags$li(tags$b("Example: "), "Let  equal the number of typos on a 
+                    printed page with a mean of 3 typos per page. What is the 
+                    probability that a randomly selected page has at least one 
+                    typo on it?")
           ), 
           
           tags$b("Continuous Distributions: "), "Data can take on an infinite 
@@ -245,7 +258,8 @@ ui <- list(
             collapsible = TRUE,
             collapsed = TRUE,
             width = '100%',
-            
+            tags$li("HELP I did not learn this distribution and the internet is 
+                    confusing me a little")
           ), 
           
           box(
@@ -255,7 +269,10 @@ ui <- list(
             collapsed = TRUE,
             width = '100%',
             tags$li("Can take on an infinite number of values within a specified range"), 
-            tags$li("Each value of has an equal probabiliy ")
+            tags$li("Each value of has an equal probabiliy "), 
+            tags$li(tags$b("Example: "), "Elevator takes between 0 and 40 seconds
+                    to arrive. What is the probability that is arrives betwwen 
+                    20 and 30 seconds?")
           ), 
           
           box(
@@ -265,7 +282,11 @@ ui <- list(
             collapsed = TRUE,
             width = '100%',
             tags$li("Occurences of events happen according to poisson process
-                    with rate \\(\\lambda\\)")
+                    with rate \\(\\lambda\\)"), 
+            tags$li(tags$b("Example: "), "X = the amount of time it takes you 
+                    to finish a book. The time to finish a book averages 4 hours. 
+                    Calculate X, the probability that it takes you betwwen 2.5 and 
+                    3 hours to finish a book.")
           ), 
           
           box(
@@ -516,6 +537,16 @@ ui <- list(
             (v0.61). [R package]. Available from
             https://CRAN.R-project.org/package=shinyBS"
           ),
+          p('https://online.stat.psu.edu/stat414/lesson/15/15.1'),
+          p("https://web.stanford.edu/class/archive/cs/cs109/cs109.1178/lectureHandouts/070-bernoulli-binomial.pdf"), 
+          p("https://corporatefinanceinstitute.com/resources/knowledge/other/uniform-distribution/#:~:text=Discrete%20uniform%20distributions%20have%20a,of%20equally%20likely%20measurable%20values."), 
+          p("https://www.statisticshowto.com/probability-and-statistics/normal-distributions/"), 
+          p("https://towardsdatascience.com/beta-distribution-intuition-examples-and-derivation-cf00f4db57af"), 
+          p("https://stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_Introductory_Statistics_(OpenStax)/05%3A_Continuous_Random_Variables/5.04%3A_The_Exponential_Distribution"), 
+          p("https://www.ucd.ie/msc/t4media/Uniform%20Distribution.pdf"), 
+          p("https://www.statistics.com/glossary/continuous-vs-discrete-distributions/#:~:text=A%20discrete%20distribution%20is%20one,(which%20may%20be%20infinite)."),
+          
+          
           br(),
           br(),
           br(),
