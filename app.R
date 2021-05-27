@@ -108,8 +108,8 @@ ui <- list(
             style = "text-align:center",
             actionButton(
               inputId = "go",
-              label = "GO TO PREREQUISITES!",
-              icon("bolt"),
+              label = "GO!",
+              icon("book"),
               size = "large",
               style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
               class = "circle grow"
@@ -329,8 +329,8 @@ ui <- list(
             style = "text-align:center",
             actionButton(
               inputId = "go2",
-              label = "GO TO CHALLENGE!",
-              icon("bolt"),
+              label = "GO!",
+              icon("cogs"),
               size = "large",
               style = "color: #fff; background-color: #337ab7; border-color: #2e6da4",
               class = "circle grow"
@@ -543,23 +543,56 @@ ui <- list(
           tabName = "references",
           withMathJax(),
           h2("References"),
-          p("You'll need to fill in this page with all of the appropriate
-            references for your app."),
+          p(
+            class = "hangingindent",
+            "Illowsky, Barbara, and Susan Dean. “5.4: The Exponential Distribution.” 
+            Statistics LibreTexts, Libretexts, 10 Mar. 2021, 
+            stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_
+            Introductory_Statistics_(OpenStax)/05%3A_Continuous_Random_Variables/
+            5.04%3A_The_Exponential_Distribution. "
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Kim, Aerin. “Beta Distribution - Intuition, Examples, and Derivation.” 
+            Towards Data Science, Medium, 8 Jan. 2020, towardsdatascience.com/
+            beta-distribution-intuition-examples-and-derivation-cf00f4db57af. "
+          ),
+          
           p(
             class = "hangingindent",
             "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
             (v0.61). [R package]. Available from
             https://CRAN.R-project.org/package=shinyBS"
           ),
-          p('https://online.stat.psu.edu/stat414/lesson/15/15.1'),
-          p("https://web.stanford.edu/class/archive/cs/cs109/cs109.1178/lectureHandouts/070-bernoulli-binomial.pdf"), 
-          p("https://corporatefinanceinstitute.com/resources/knowledge/other/uniform-distribution/#:~:text=Discrete%20uniform%20distributions%20have%20a,of%20equally%20likely%20measurable%20values."), 
-          p("https://www.statisticshowto.com/probability-and-statistics/normal-distributions/"), 
-          p("https://towardsdatascience.com/beta-distribution-intuition-examples-and-derivation-cf00f4db57af"), 
-          p("https://stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_Introductory_Statistics_(OpenStax)/05%3A_Continuous_Random_Variables/5.04%3A_The_Exponential_Distribution"), 
-          p("https://www.ucd.ie/msc/t4media/Uniform%20Distribution.pdf"), 
-          p("https://www.statistics.com/glossary/continuous-vs-discrete-distributions/#:~:text=A%20discrete%20distribution%20is%20one,(which%20may%20be%20infinite)."),
           
+          p(
+            class = "hangingindent",
+            "Monroe, Will. Bernoulli and Binomial Random Variables. 10 July 2017, 
+            web.stanford.edu/class/archive/cs/cs109/cs109.1178/lectureHandouts/
+            070-bernoulli-binomial.pdf. "
+          ),
+          
+          p(
+            class = "hangingindent",
+            "“Normal Distributions (Bell Curve): Definition, Word Problems.” 
+            Statistics How To, www.statisticshowto.com/probability-and-statistics/
+            normal-distributions/. "
+          ),
+          
+          p(
+            class = "hangingindent",
+            "“Statistics: Uniform Distribution (Continuous).” UCD Maths Support Centre, 
+            www.ucd.ie/msc/t4media/Uniform%20Distribution.pdf. "
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Uniform Distribution.” Corporate Finance Institute, CFI Education Inc., 
+            13 Apr. 2021, corporatefinanceinstitute.com/resources/knowledge/other/
+            uniform-distribution/#:~:text=Discrete%20uniform%20distributions%20have%20a,
+            of%20equally%20likely%20measurable%20values. "
+          ),
           
           br(),
           br(),
