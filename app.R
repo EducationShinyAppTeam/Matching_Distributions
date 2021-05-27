@@ -267,8 +267,11 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("HELP I did not learn this distribution and the internet is 
-                      confusing me a little")
+              tags$li("Represents a family of probabilities"), 
+              tags$li("Represents outcomes for percentages or proportions"), 
+              tags$li(tags$b("Example: "), "How likely is it that Kanye West
+                      wins the Presidential Election? You might think it is 10%
+                      but your mom might think it is 2%")
             ), 
             
             box(
@@ -307,7 +310,9 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               tags$li("Occurences of events happen according to poisson process with rate \\(\\lambda\\)"), 
-              tags$li("X is the waiting time until the \\(\\alpha\\) th occurence")
+              tags$li("X is the waiting time until the \\(\\alpha\\) th occurence"), 
+              tags$li(tags$b("Example: "), "Let X represent how long before there
+                      are 6 teenagers who get a driving ticket.")
             ), 
           ),
           
@@ -320,7 +325,9 @@ ui <- list(
               collapsed = TRUE,
               tags$li("Bell shaped curve"), 
               tags$li("Mean, median, and mode are equal"), 
-              tags$li("Total area under curve is one")
+              tags$li("Total area under curve is one"), 
+              tags$li(tags$b("Example: "), "Let X represent the salaries of adults over 30
+                      (usually this is normally distributed)")
             ), 
           ),
           
@@ -549,14 +556,14 @@ ui <- list(
             Statistics LibreTexts, Libretexts, 10 Mar. 2021, 
             stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_
             Introductory_Statistics_(OpenStax)/05%3A_Continuous_Random_Variables/
-            5.04%3A_The_Exponential_Distribution. "
+            5.04%3A_The_Exponential_Distribution."
           ),
           
           p(
             class = "hangingindent",
             "Kim, Aerin. “Beta Distribution - Intuition, Examples, and Derivation.” 
             Towards Data Science, Medium, 8 Jan. 2020, towardsdatascience.com/
-            beta-distribution-intuition-examples-and-derivation-cf00f4db57af. "
+            beta-distribution-intuition-examples-and-derivation-cf00f4db57af."
           ),
           
           p(
@@ -570,20 +577,27 @@ ui <- list(
             class = "hangingindent",
             "Monroe, Will. Bernoulli and Binomial Random Variables. 10 July 2017, 
             web.stanford.edu/class/archive/cs/cs109/cs109.1178/lectureHandouts/
-            070-bernoulli-binomial.pdf. "
+            070-bernoulli-binomial.pdf."
           ),
           
           p(
             class = "hangingindent",
             "“Normal Distributions (Bell Curve): Definition, Word Problems.” 
             Statistics How To, www.statisticshowto.com/probability-and-statistics/
-            normal-distributions/. "
+            normal-distributions/."
           ),
           
           p(
             class = "hangingindent",
             "“Statistics: Uniform Distribution (Continuous).” UCD Maths Support Centre, 
-            www.ucd.ie/msc/t4media/Uniform%20Distribution.pdf. "
+            www.ucd.ie/msc/t4media/Uniform%20Distribution.pdf."
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Stephanie. “Beta Distribution: Definition, Calculation.” Statistics 
+            How To, Statistics How To, www.statisticshowto.com/beta-distribution/
+            #:~:text=A%20Beta%20distribution%20is%20a,think%20the%20probability%20is%200.2."
           ),
           
           p(
@@ -591,7 +605,7 @@ ui <- list(
             "Uniform Distribution.” Corporate Finance Institute, CFI Education Inc., 
             13 Apr. 2021, corporatefinanceinstitute.com/resources/knowledge/other/
             uniform-distribution/#:~:text=Discrete%20uniform%20distributions%20have%20a,
-            of%20equally%20likely%20measurable%20values. "
+            of%20equally%20likely%20measurable%20values."
           ),
           
           br(),
