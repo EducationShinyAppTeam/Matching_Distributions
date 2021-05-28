@@ -139,8 +139,7 @@ ui <- list(
                     variance, and moment-generating function in the ",
               tags$a(
                 href = "https://psu-eberly.shinyapps.io/probability_applications/",
-                "Probability Applications", class = "bodylinks"), "app's prerequisite page!"),
-            tags$li("Keep a look out for '*' that point out special/ extra topics!")
+                "Probability Applications", class = "bodylinks"), "app's prerequisite page!")
           ),
           
           tags$b("Discrete Distributions: "), "Data can only take on certain values 
@@ -561,16 +560,15 @@ ui <- list(
           
           p(
             class = "hangingindent",
-            "Kim, Aerin. “Beta Distribution - Intuition, Examples, and Derivation.” 
-            Towards Data Science, Medium, 8 Jan. 2020, towardsdatascience.com/
-            beta-distribution-intuition-examples-and-derivation-cf00f4db57af."
+            "Introduction to STAT 414.” PennState Eberly College of Science, 
+            online.stat.psu.edu/stat414/lesson/introduction-stat-414." 
           ),
           
           p(
             class = "hangingindent",
-            "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
-            (v0.61). [R package]. Available from
-            https://CRAN.R-project.org/package=shinyBS"
+            "Kim, Aerin. “Beta Distribution - Intuition, Examples, and Derivation.” 
+            Towards Data Science, Medium, 8 Jan. 2020, towardsdatascience.com/
+            beta-distribution-intuition-examples-and-derivation-cf00f4db57af."
           ),
           
           p(
@@ -904,7 +902,7 @@ server <- function(session, input, output) {
     )
     .generateStatement(session, object = "hint", verb = "interacted", description = "Hint", 
         value = bank[id, 6])
-  })
+    })
 
   ### SUBMIT BUTTON###
   observeEvent(input$submit, {
