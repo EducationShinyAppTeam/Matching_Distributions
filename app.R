@@ -622,8 +622,10 @@ server <- function(session, input, output) {
   #   updateButton(session, "submit", disabled = TRUE)
   # })
 
+  
   observeEvent(input$submit, {
     updateButton(session, "nextq", disabled = FALSE)
+    updateButton(session, "hint", disabled = FALSE)
   })
 
   observeEvent(input$submit, {
@@ -635,7 +637,7 @@ server <- function(session, input, output) {
   observeEvent(input$nextq, {
     updateButton(session, "submit", disabled = FALSE)
     updateButton(session, "nextq", disabled = TRUE)
-    updateButton(session, "hint", disabled = FALS)
+    updateButton(session, "hint", disabled = FALSE)
     
   })
 
