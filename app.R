@@ -521,63 +521,14 @@ ui <- list(
           tabName = "references",
           withMathJax(),
           h2("References"),
-          p(
-            class = "hangingindent",
-            "Illowsky, Barbara, and Susan Dean. “5.4: The Exponential Distribution.” 
-            Statistics LibreTexts, Libretexts, 10 Mar. 2021, 
-            stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_
-            Introductory_Statistics_(OpenStax)/05%3A_Continuous_Random_Variables/
-            5.04%3A_The_Exponential_Distribution."
-          ),
+          
           
           p(
             class = "hangingindent",
             "Introduction to STAT 414.” PennState Eberly College of Science, 
             online.stat.psu.edu/stat414/lesson/introduction-stat-414." 
           ),
-          
-          p(
-            class = "hangingindent",
-            "Kim, Aerin. “Beta Distribution - Intuition, Examples, and Derivation.” 
-            Towards Data Science, Medium, 8 Jan. 2020, towardsdatascience.com/
-            beta-distribution-intuition-examples-and-derivation-cf00f4db57af."
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Monroe, Will. Bernoulli and Binomial Random Variables. 10 July 2017, 
-            web.stanford.edu/class/archive/cs/cs109/cs109.1178/lectureHandouts/
-            070-bernoulli-binomial.pdf."
-          ),
-          
-          p(
-            class = "hangingindent",
-            "“Normal Distributions (Bell Curve): Definition, Word Problems.” 
-            Statistics How To, www.statisticshowto.com/probability-and-statistics/
-            normal-distributions/."
-          ),
-          
-          p(
-            class = "hangingindent",
-            "“Statistics: Uniform Distribution (Continuous).” UCD Maths Support Centre, 
-            www.ucd.ie/msc/t4media/Uniform%20Distribution.pdf."
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Stephanie. “Beta Distribution: Definition, Calculation.” Statistics 
-            How To, Statistics How To, www.statisticshowto.com/beta-distribution/
-            #:~:text=A%20Beta%20distribution%20is%20a,think%20the%20probability%20is%200.2."
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Uniform Distribution.” Corporate Finance Institute, CFI Education Inc., 
-            13 Apr. 2021, corporatefinanceinstitute.com/resources/knowledge/other/
-            uniform-distribution/#:~:text=Discrete%20uniform%20distributions%20have%20a,
-            of%20equally%20likely%20measurable%20values."
-          ),
-          
+        
           br(),
           br(),
           br(),
@@ -665,11 +616,11 @@ server <- function(session, input, output) {
       selected = "challenge")
   })
   
-  #*Don't understand what this button is for??*
-  observeEvent(input$go, {
-    #updateTabItems(session, "pages", "challenge")
-    updateButton(session, "submit", disabled = TRUE)
-  })
+  # #*Don't understand what this button is for??*
+  # observeEvent(input$go, {
+  #   #updateTabItems(session, "pages", "challenge")
+  #   updateButton(session, "submit", disabled = TRUE)
+  # })
 
   observeEvent(input$submit, {
     updateButton(session, "nextq", disabled = FALSE)
@@ -677,17 +628,23 @@ server <- function(session, input, output) {
 
   observeEvent(input$submit, {
     updateButton(session, "submit", disabled = TRUE)
+    updateButton(session, "hint", disabled = TRUE)
+    
   })
 
   observeEvent(input$nextq, {
     updateButton(session, "submit", disabled = FALSE)
     updateButton(session, "nextq", disabled = TRUE)
+    updateButton(session, "hint", disabled = FALS)
+    
   })
 
   observeEvent(input$restart, {
     updateButton(session, "submit", disabled = TRUE)
     updateButton(session, "restart", disabled = FALSE)
     updateButton(session, "filter", disabled = FALSE)
+    updateButton(session, "hint", disabled = TRUE)
+    
 
     GAME_OVER <<- FALSE
     .generateStatement(session, object = "restart", verb = "interacted", description = "Game has been restarted.")
@@ -908,6 +865,8 @@ server <- function(session, input, output) {
       )
       updateButton(session, "submit", disabled = TRUE)
       updateButton(session, "nextq", disabled = TRUE)
+      updateButton(session, "hint", disabled = TRUE)
+      
     }
     else {
       id <<- sample(numberRow, 1, replace = FALSE, prob = NULL)
@@ -972,6 +931,8 @@ server <- function(session, input, output) {
           updateButton(session, "submit", disabled = TRUE)
           updateButton(session, "nextq", disabled = TRUE)
           updateButton(session, "restart", disabled = FALSE)
+          updateButton(session, "hint", disabled = TRUE)
+          
         }
       } else {
         value[["mistake"]] <<- value[["mistake"]] + 1
@@ -984,6 +945,8 @@ server <- function(session, input, output) {
           updateButton(session, "nextq", disabled = TRUE)
           updateButton(session, "restart", disabled = FALSE)
           updateButton(session, "filter", disabled = TRUE)
+          updateButton(session, "hint", disabled = TRUE)
+          
 
           sendSweetAlert(
             session = session,
@@ -1038,26 +1001,28 @@ server <- function(session, input, output) {
 
   output$distPlot <- renderUI({
     if (value[["mistake"]] == 0) {
-      img(src = "Cell01.jpg")
+      img(src = "Cell01.jpg", alt = "Man resting on top branch.")
     }
 
     else if (value[["mistake"]] == 1) {
-      img(src = "Cell02.jpg")
+      img(src = "Cell02.jpg", alt = "Man has fallen down one branch. Two 
+                                    more branches left!")
     }
 
     else if (value[["mistake"]] == 2) {
-      img(src = "Cell03.jpg")
+      img(src = "Cell03.jpg", alt = "Man has fallen down one branch. One 
+                                    more branches left!")
     }
 
     else if (value[["mistake"]] == 3) {
-      img(src = "Cell04.jpg")
+      img(src = "Cell04.jpg", alt = "Man is standing on the last branch.")
     }
 
     else if (value[["mistake"]] == 4) {
-      img(src = "Cell05.jpg")
+      img(src = "Cell05.jpg", alt = "Man has fallen to the ground.")
     }
     else if (value[["mistake"]] == 5) {
-      img(src = "GAMEOVER.png")
+      img(src = "GAMEOVER.png", alt = "Game Over!")
     }
   })
 }
