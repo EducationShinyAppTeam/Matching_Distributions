@@ -142,10 +142,10 @@ ui <- list(
                 "Probability Applications", class = "bodylinks"), "app's prerequisite page!")
           ),
           
-          tags$b("Discrete Distributions: "), "Data can only take on certain values 
-                                                such as integers. A probabilities can
-                                                be assigned to each of the values in the 
-                                                distribution", 
+          br(), 
+          br(), 
+          tags$b("Discrete Distributions: ", style = "font-size:20px;"), "Data can only take on certain values 
+                                              in a discrete set such as integers.",
           br(), 
           br(), 
           
@@ -156,11 +156,8 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Can take on two values, 1 or 0"), 
-              tags$li("If experiment with probability", tags$em("p"), "is a success, 
-                      the random variable takes on the value 1"), 
-              tags$li("Otherwise, it takes on the value 0 (failure"),
-              tags$li(tags$b("Example: "), "Does a single coin flip result in a head or tail?")
+              tags$li(tags$b("Model: "), "Values can only be 0 or 1."), 
+              tags$li(tags$b("Example: "), "Number of “heads” in one toss of a coin.")
             ),
             
             box(
@@ -169,11 +166,10 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Fixed number of trials"),
-              tags$li("Independent trials"), 
-              tags$li("Trail can be success or failure"),
-              tags$li("Probability of success/ failure is te same for each trial"), 
-              tags$li(tags$b("Example: "), "Number of heads in ", tags$em("n"), "coin flips.")
+              tags$li(tags$b("Model: "), "Number of successes in a fixed number 
+                                          of independent trials."), 
+              tags$li(tags$b("Example: "), "Number of “heads” in ten tosses of 
+                                            a coin.")
             ), 
           ), 
           
@@ -184,10 +180,8 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Finite values"), 
-              tags$li("Probability of outcomes is equally likely"),
-              tags$li(tags$b("Example: "), "The probability of rolling a three on a 
-                      six-sided die")
+              tags$li(tags$b("Model: "), "Equally likely individual outcomes."), 
+              tags$li(tags$b("Example: "), "The number that comes up when a die is rolled.")
             ), 
             
             box(
@@ -196,10 +190,8 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Number of trails on which first success occurs"),
-              tags$li("OR number of failures until first success"), 
-              tags$li(tags$b("Example: "), "Probability that you choose five hats
-                      before finding the first blue one.")
+              tags$li(tags$b("Model: "), "Number of independent trials until first success."), 
+              tags$li(tags$b("Example: "), "Number of tosses until you get a “heads”.")
             ), 
           ),
             
@@ -210,9 +202,8 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Randomly select ", tags$em("n"), "items without replacement from ",
-                      tags$em("N"), "items"), 
-              tags$li("There are ", tags$em("m"), "of type 1 items and ", tags$em("N-m"), 
+              tags$li(tags$b("Model: "), "Randomly select ", tags$em("n"), "items without replacement from ",
+                      tags$em("N"), "items. There are ", tags$em("m"), "of type 1 items and ", tags$em("N-m"), 
                       "of type 2 items"),
               tags$li(tags$b("Example: "), "A bowl contains 30 red marbles and 60 black 
                       marbles. You randomly choose 15 marbles from the bowl. What is the probability 
@@ -225,12 +216,8 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Perform trails until rth success"), 
-              tags$li("Independent trails"), 
-              tags$li("Each trail results in success or failure"), 
-              tags$li("Probability of success same for each trail"), 
-              tags$li(tags$b("Example: "), "Probability that it takes you four trails
-                      to have 2 successes.")
+              tags$li(tags$b("Model: "), "Number of independent trials until the kth success."), 
+              tags$li(tags$b("Example: "), "Number of tosses until you get ten “heads”.")
             ), 
           ),
           
@@ -241,21 +228,15 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Events are independent"), 
-              tags$li("Occurs at constant average rate"), 
-              tags$li("Two or more events can't happen at the same time"), 
-              tags$li(tags$b("Example: "), "Let  equal the number of typos on a 
-                      printed page with a mean of 3 typos per page. What is the 
-                      probability that a randomly selected page has at least one 
-                      typo on it?")
+              tags$li(tags$b("Model: "), "Count of rare events in a fixed time or space."), 
+              tags$li(tags$b("Example: "), "Number of fatal scuba diving accidents in 
+                                            Australia next year.")
             ), 
           ),
           
-          tags$b("Continuous Distributions: "), "Data can take on an infinite 
-                                                  number of values. So, one can 
-                                                  calculate the probability that  
-                                                  a value will fall in a certain 
-                                                  range.",
+          br(), 
+          br(), 
+          tags$b("Continuous Distributions: ", style = "font-size:20px;"), "Can take on values from a continuim.",
           br(), 
           br(), 
           
@@ -266,11 +247,10 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Represents a family of probabilities"), 
-              tags$li("Represents outcomes for percentages or proportions"), 
-              tags$li(tags$b("Example: "), "How likely is it that Kanye West
-                      wins the Presidential Election? You might think it is 10%
-                      but your mom might think it is 2%")
+              tags$li(tags$b("Model: "), "Specific rank out of fixed number of independent 
+                                          standard uniforms."), 
+              tags$li(tags$b("Example: "), "The median of five trials for the proportion 
+                                            of the way around a circle that a spinner lands.")
             ), 
             
             box(
@@ -279,11 +259,9 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Can take on an infinite number of values within a specified range"), 
-              tags$li("Each value of has an equal probabiliy "), 
-              tags$li(tags$b("Example: "), "Elevator takes between 0 and 40 seconds
-                      to arrive. What is the probability that is arrives betwwen 
-                      20 and 30 seconds?")
+              tags$li(tags$b("Model: "), "Probability spread evenly over a range."), 
+              tags$li(tags$b("Example: "), "The proportion of the way around a 
+                                            circle for the angle that a spinner lands.")
             ), 
           ), 
           
@@ -294,12 +272,9 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Occurences of events happen according to poisson process
-                      with rate \\(\\lambda\\)"), 
-              tags$li(tags$b("Example: "), "X = the amount of time it takes you 
-                      to finish a book. The time to finish a book averages 4 hours. 
-                      Calculate X, the probability that it takes you betwwen 2.5 and 
-                      3 hours to finish a book.")
+              tags$li(tags$b("Model: "), "Time to next independent rare event."), 
+              tags$li(tags$b("Example: "), "How long until the next fatal scuba 
+                                            diving accident in Australia.")
             ), 
             
             box(
@@ -308,10 +283,9 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Occurences of events happen according to poisson process with rate \\(\\lambda\\)"), 
-              tags$li("X is the waiting time until the \\(\\alpha\\) th occurence"), 
-              tags$li(tags$b("Example: "), "Let X represent how long before there
-                      are 6 teenagers who get a driving ticket.")
+              tags$li(tags$b("Model: "), "Time until kth rare independent event."), 
+              tags$li(tags$b("Example: "), "How long until there are ten fata 
+                                            scuba diving accidents in Australia.")
             ), 
           ),
           
@@ -322,11 +296,9 @@ ui <- list(
               width = 6, 
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$li("Bell shaped curve"), 
-              tags$li("Mean, median, and mode are equal"), 
-              tags$li("Total area under curve is one"), 
-              tags$li(tags$b("Example: "), "Let X represent the salaries of adults over 30
-                      (usually this is normally distributed)")
+              tags$li(tags$b("Model: "), "Sums or averages from a large sample."), 
+              tags$li(tags$b("Example: "), "Average income for a random sample 
+                                            of 1000 people.")
             ), 
           ),
           
@@ -758,6 +730,7 @@ server <- function(session, input, output) {
     output$mark <- renderUI({
       img(src = NULL, width = 30)
     })
+    
     id <<- 0
     numberRow <<- numeric()
     value[["mistake"]] <<- 0
@@ -825,7 +798,10 @@ server <- function(session, input, output) {
     continuouschosen <- input$continuouslist
     distributionchosen <<- c(discretechosen, continuouschosen)
 
-    .generateStatement(session, object = "filter", verb = "interacted", description = "Please select the distributions you'd like to use in this app and click Filter", value = paste(distributionchosen, sep = ", ", collapse = ", "))
+    .generateStatement(session, object = "filter", verb = "interacted", 
+          description = "Please select the distributions you'd like to use 
+          in this app and click Filter", value = paste(distributionchosen, 
+          sep = ", ", collapse = ", "))
 
     numberRow <- numeric()
     # numberRow <- dplyr::filter(bank, bank$distribution %in% distributionchosen)
@@ -868,6 +844,7 @@ server <- function(session, input, output) {
     numberRow <<- numberRow
     updateButton(session, "submit", disabled = FALSE)
     # print(numberRow)
+    
     ### Select questions from edited databank###
     output$question <- renderUI({
       withMathJax()
