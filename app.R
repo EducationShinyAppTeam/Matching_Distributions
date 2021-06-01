@@ -44,7 +44,7 @@ ui <- list(
       id = "pages",
       menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
       menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
-      menuItem("Challenge", tabName = "challenge", icon = icon("cogs")), 
+      menuItem("Game", tabName = "game", icon = icon("cogs")), 
       menuItem("References", tabName = "references", icon = icon("leanpub"))
       ),
       tags$div(
@@ -73,12 +73,12 @@ ui <- list(
         # Overview Tab
         tabItem(
           tabName = "overview",
-          h3("Matching Distributions"),
+          h1("Matching Distributions"),
           p(
             "In this App, you will gain practice at associating context with 
             different probability distributions. "),
           br(),
-          h3("Instructions:"),
+          h2("Instructions:"),
           tags$ul(
             tags$li(
               "You will start this game with a little man on the top of a tree, 
@@ -108,7 +108,7 @@ ui <- list(
               only click 'Next Question' to move on to your next challenge. "
             ), 
             tags$li(
-              "Before checking out the challenge page, be sure to review your 
+              "Before checking out the game page, be sure to review your 
               knowledge on the prerequisites page!"
             )
           ),
@@ -135,7 +135,7 @@ ui <- list(
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
-          h2("Prerequisites"),
+          h1("Prerequisites"),
           p("In order to get the most out of this app, please review the
             following:"),
           tags$ul(
@@ -328,9 +328,9 @@ ui <- list(
           ),
         ),
         
-        #### Challenge Tab
+        #### Game Tab
         tabItem(
-          tabName = "challenge",
+          tabName = "game",
           fluidRow(
             column(
               width = 6,
@@ -418,7 +418,7 @@ ui <- list(
                 inputId = "filter",
                 label = "Filter",
                 size = "large",
-                style = "warning",
+                style = "primary",
                 disabled = FALSE
               )
             )
@@ -477,7 +477,7 @@ ui <- list(
                       inputId = "submit",
                       label = "Submit",
                       size = "large",
-                      style = "warning",
+                      style = "primary",
                       disabled = TRUE
                     )
                   ),
@@ -501,7 +501,7 @@ ui <- list(
                       inputId = "restart",
                       label = "Restart the game",
                       size = "large",
-                      style = "warning",
+                      style = "primary",
                       disabled = FALSE
                     )
                   ),
@@ -547,7 +547,7 @@ ui <- list(
         tabItem(
           tabName = "references",
           withMathJax(),
-          h2("References"),
+          h1("References"),
           p(
             class = "hangingindent",
             "Attali, D. (2020). shinyjs: Easily Improve the User Experience of
@@ -684,7 +684,7 @@ server <- function(session, input, output) {
     updateTabItems(
       session = session,
       inputId = "pages",
-      selected = "challenge")
+      selected = "game")
   })
 
   
@@ -862,6 +862,7 @@ server <- function(session, input, output) {
     updateSelectInput(
       session = session, 
       inputId = "answer", 
+      label = "", 
       choices = "", 
       c("Select Distribution"))
 
