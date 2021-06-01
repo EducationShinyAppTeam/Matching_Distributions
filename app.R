@@ -331,6 +331,7 @@ ui <- list(
         #### Game Tab
         tabItem(
           tabName = "game",
+          h1("Matching Distributions Game"), 
           fluidRow(
             column(
               width = 6,
