@@ -180,7 +180,7 @@ ui <- list(
                                           of independent trials."), 
               tags$li(tags$b("Example: "), "Number of “heads” in ten tosses of 
                                             a coin.")
-            ), 
+            )
           ), 
           
           fluidRow(
@@ -202,7 +202,7 @@ ui <- list(
               collapsed = TRUE,
               tags$li(tags$b("Model: "), "Number of independent trials until first success."), 
               tags$li(tags$b("Example: "), "Number of tosses until you get a “heads”.")
-            ), 
+            )
           ),
             
           fluidRow(  
@@ -231,7 +231,7 @@ ui <- list(
               collapsed = TRUE,
               tags$li(tags$b("Model: "), "Number of independent trials until the kth success."), 
               tags$li(tags$b("Example: "), "Number of tosses until you get ten “heads”.")
-            ), 
+            )
           ),
           
           fluidRow(
@@ -244,7 +244,7 @@ ui <- list(
               tags$li(tags$b("Model: "), "Count of rare events in a fixed time or space."), 
               tags$li(tags$b("Example: "), "Number of fatal scuba diving accidents in 
                                             Australia next year.")
-            ), 
+            )
           ),
           
           br(), 
@@ -276,7 +276,7 @@ ui <- list(
               tags$li(tags$b("Model: "), "Probability spread evenly over a range."), 
               tags$li(tags$b("Example: "), "The proportion of the way around a 
                                             circle for the angle that a spinner lands.")
-            ), 
+            )
           ), 
           
           fluidRow(
@@ -300,7 +300,7 @@ ui <- list(
               tags$li(tags$b("Model: "), "Time until kth rare independent event."), 
               tags$li(tags$b("Example: "), "How long until there are ten fata 
                                             scuba diving accidents in Australia.")
-            ), 
+            )
           ),
           
           fluidRow(
@@ -313,7 +313,7 @@ ui <- list(
               tags$li(tags$b("Model: "), "Sums or averages from a large sample."), 
               tags$li(tags$b("Example: "), "Average income for a random sample 
                                             of 1000 people.")
-            ), 
+            )
           ),
           
           ##### Go Button--location will depend on your goals ----
@@ -325,7 +325,7 @@ ui <- list(
               icon("cogs"),
               size = "large"
             )
-          ),
+          )
         ),
         
         #### Game Tab
@@ -405,7 +405,7 @@ ui <- list(
                                  "Gamma", 
                                  "Exponential", 
                                  "Normal", 
-                                 "Beta"),
+                                 "Beta")
                   )
                 )
               ),
