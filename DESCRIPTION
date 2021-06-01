@@ -1,0 +1,22 @@
+Title: Matching Distributions
+ShortName: Matching Distributions
+Date: 2021-06-1
+Lifecycle: experimental
+Authors@R: c(
+    person(given = "Zhiliang", family = "Zhang", email = " ", role = c("aut")),
+    person(given = "Yiyang", family = "Wang", email = " ", role = c("upd")), 
+    person(given = "Shravani", family = "Samala", email = "sjs7049@psu.edu", role = c("upd"))
+  )
+Chapter: Probability
+Description: This app is focused teaching users how to use context to determine
+            which probability distribution to use.
+LearningObjectives: c(
+    "The student will learn to recognize/match phrases with certain probability
+    distributions in the prerequisites and game page."
+  )
+DisplayMode: Normal
+URL: https://psu-eberly.shinyapps.io/Sample_App
+BugReports: https://github.com/EducationShinyAppTeam/Sample_App/issues
+License: CC-BY-NC-SA-4.0
+Tags: simulation
+Type: Shiny

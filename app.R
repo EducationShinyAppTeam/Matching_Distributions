@@ -81,15 +81,15 @@ ui <- list(
           h3("Instructions:"),
           tags$ul(
             tags$li(
-              "You'll start this game with a little man on the top of a tree, 
+              "You will start this game with a little man on the top of a tree, 
               and you are trying to prevent his fall to the ground.  If you 
               provide a wrong answer, he falls to a lower branch and eventually 
               to the ground. If you get 10 questions correct before he falls to 
               the ground, you have won the game and saved the little man!"
             ),
             tags$li(
-              "Please select which probability distribution(s) you'd like to 
-              work on and hit the “filter” button."
+              "Please select which probability distribution(s) you would like to 
+              work on and hit the 'filter button."
             ),
             tags$li(
               "Read the given text and choose a distribution from the dropdown 
@@ -478,7 +478,7 @@ ui <- list(
                       label = "Submit",
                       size = "large",
                       style = "warning",
-                      disabled = FALSE
+                      disabled = TRUE
                     )
                   ),
                   br(),
