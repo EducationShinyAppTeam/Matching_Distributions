@@ -521,13 +521,48 @@ ui <- list(
           tabName = "references",
           withMathJax(),
           h2("References"),
-          
-          
+          p(
+            class = "hangingindent",
+            "Attali, D. (2020). shinyjs: Easily Improve the User Experience of
+              Your Shiny Apps in Seconds. R package version 1.1. Available from
+              https://CRAN.R-project.org/package=shinyjs"
+          ),
+          p(
+            class = "hangingindent",
+            "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
+            (v0.61). [R package]. Available from
+            https://CRAN.R-project.org/package=shinyBS"
+          ),
+          p(
+            class = "hangingindent",
+            "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST Utilities. 
+            R package version 0.1.6.3. Available from 
+            https://github.com/EducationShinyAppTeam/boastUtils"
+          ),
+          p(
+            class = "hangingindent",
+            "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard: 
+            Create Dashboards with 'Shiny'. R package version 0.7.1. Available 
+            from https://CRAN.R-project.org/package=shinydashboard"
+          ),
+          p(
+            class = "hangingindent",
+            "Chang, W., Cheng, J., Allaire, J., Xie, Y., and McPherson, J. 
+            (2020). shiny: Web Application Framework for R. R package version 
+            1.5.0. Available from https://CRAN.R-project.org/package=shiny"
+          ),
           p(
             class = "hangingindent",
             "Introduction to STAT 414.” PennState Eberly College of Science, 
             online.stat.psu.edu/stat414/lesson/introduction-stat-414." 
           ),
+          p(
+            class = "hangingindent",
+            "Perrier, V., Meyer, F., and Granjon, D. (2020). shinyWidgets: 
+            Custom Inputs Widgets for Shiny. R package version 0.5.3. Available 
+            from https://CRAN.R-project.org/package=shinyWidgets"
+          ),
+        
         
           br(),
           br(),
