@@ -352,7 +352,7 @@ ui <- list(
                   actionButton(
                     inputId = "selectAllD", 
                     label = "Unselect",
-                    size ="small"
+                    size = "small"
                   ),
                   checkboxGroupInput(
                     inputId = "discretelist",
@@ -590,7 +590,6 @@ ui <- list(
             Custom Inputs Widgets for Shiny. R package version 0.5.3. Available 
             from https://CRAN.R-project.org/package=shinyWidgets"
           ),
-        
         
           br(),
           br(),
