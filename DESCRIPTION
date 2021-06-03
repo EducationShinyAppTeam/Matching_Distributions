@@ -5,7 +5,7 @@ Lifecycle: experimental
 Authors@R: c(
     person(given = "Zhiliang", family = "Zhang", email = " ", role = c("aut")),
     person(given = "Yiyang", family = "Wang", email = " ", role = c("cre")), 
-    person(given = "Shravani", family = "Samala", email = "sjs7049@psu.edu", role = c("cre"))
+    person(given = "Shravani", family = "Samala", email = "sjs7049@psu.edu", role = c("aut"))
   )
 Chapter: Probability
 Description: This app is focused teaching users how to use context to determine
