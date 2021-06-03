@@ -419,7 +419,7 @@ ui <- list(
                 inputId = "filter",
                 label = "Filter",
                 size = "large",
-                style = "primary",
+                style = "warning",
                 disabled = FALSE
               )
             )
@@ -478,7 +478,7 @@ ui <- list(
                       inputId = "submit",
                       label = "Submit",
                       size = "large",
-                      style = "primary",
+                      style = "success",
                       disabled = TRUE
                     )
                   ),
@@ -502,7 +502,7 @@ ui <- list(
                       inputId = "restart",
                       label = "Restart the game",
                       size = "large",
-                      style = "primary",
+                      style = "warning",
                       disabled = FALSE
                     )
                   ),
