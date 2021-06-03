@@ -428,100 +428,92 @@ ui <- list(
           titlePanel("Matching the text with the distribution"),
           sidebarLayout(
             sidebarPanel(
-              wellPanel(
-                style = "background-color: #EAF2F8",
-                withMathJax(uiOutput("question")),
-                tags$style(
-                  type = "text/css",
-                  "#question {font-size: 125%;background-color: #EAF2F8;color: black;}",
-                  ".well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }"
-                )
-              ),
+              withMathJax(uiOutput("question")),
+              # tags$style(
+              #   type = "text/css",
+              #   "#question {font-size: 125%;background-color: #EAF2F8;color: black;}",
+              #   ".well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }"
+              # ), 
   
-              wellPanel(
-                style = "background-color: #EAF2F8",
-  
-                fluidRow(column(
-                  10,
-                  p(
-                    "Identify the distribution of given text:",
-                    tags$li(
-                      style = "display: inline-block;",
-                      bsButton(
-                        inputId = "hint",
-                        label = "hint", 
-                        icon = icon("question"),
-                        size = "large", 
-                        disabled = TRUE
-                      )
+              fluidRow(column(
+                10,
+                p(
+                  "Identify the distribution of given text:",
+                  tags$li(
+                    style = "display: inline-block;",
+                    bsButton(
+                      inputId = "hint",
+                      label = "hint", 
+                      icon = icon("question"),
+                      size = "large", 
+                      disabled = TRUE
                     )
                   )
-                )),
-  
-                fluidRow(
-                  tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
-                  column(
-                    8,
-                    uiOutput("answerbox"),
-                    selectInput(
-                      inputId = "answer", 
-                      choices = "", 
-                      c("Select Distribution"),
-                      width = "100%"
-                    )
-                  ),
-                  br(),
-                  column(1, uiOutput("mark")),
-                  column(
-                    3,
-                    bsButton(
-                      inputId = "submit",
-                      label = "Submit",
-                      size = "large",
-                      style = "success",
-                      disabled = TRUE
-                    )
-                  ),
-                  br(),
-                  br(),
-                  br(),
-  
-                  column(
-                    4,
-                    bsButton(
-                      inputId = "nextq",
-                      label = "Next Question",
-                      size = "large",
-                      style = "success",
-                      disabled = TRUE
-                    )
-                  ),
-                  column(
-                    4,
-                    bsButton(
-                      inputId = "restart",
-                      label = "Restart the game",
-                      size = "large",
-                      style = "warning",
-                      disabled = FALSE
-                    )
-                  ),
-                  br(),
-                  br(),
-                  br(),
-                  uiOutput("test1"),
-                  uiOutput("test2")
                 )
-              ),
-              wellPanel(
-                style = "background-color: #EAF2F8",
-                fluidRow(column(
-                  width = 12,
-                  uiOutput("feedback")
-                ))
-              ),
-  
-  
+              )),
+
+              fluidRow(
+                tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
+                column(
+                  8,
+                  uiOutput("answerbox"),
+                  selectInput(
+                    inputId = "answer", 
+                    choices = "", 
+                    c("Select Distribution"),
+                    width = "100%"
+                  )
+                ),
+                br(),
+                column(1, uiOutput("mark")),
+                column(
+                  3,
+                  bsButton(
+                    inputId = "submit",
+                    label = "Submit",
+                    size = "large",
+                    style = "success",
+                    disabled = TRUE
+                  )
+                ),
+                br(),
+                br(),
+                br(),
+
+                column(
+                  4,
+                  bsButton(
+                    inputId = "nextq",
+                    label = "Next Question",
+                    size = "large",
+                    style = "success",
+                    disabled = TRUE
+                  )
+                ),
+                column(
+                  4,
+                  bsButton(
+                    inputId = "restart",
+                    label = "Restart the game",
+                    size = "large",
+                    style = "warning",
+                    disabled = FALSE
+                  )
+                ),
+                br(),
+                br(),
+                br(),
+                uiOutput("test1"),
+                uiOutput("test2")
+              ), 
+              
+              
+              fluidRow(column(
+                width = 12,
+                uiOutput("feedback")
+              )), 
+              
+
               br(),
               br(),
               br(),
