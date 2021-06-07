@@ -466,6 +466,7 @@ ui <- list(
                   )
                 ),
                 br(),
+
                 column(1, uiOutput("mark")),
                 column(
                   3,
@@ -480,7 +481,7 @@ ui <- list(
                 br(),
                 br(),
                 br(),
-                
+
                 column(
                   4,
                   bsButton(
@@ -511,6 +512,7 @@ ui <- list(
               
               fluidRow(column(
                 width = 12,
+                uiOutput("hintDisplay"), 
                 uiOutput("feedback")
               )), 
               
@@ -1113,21 +1115,31 @@ server <- function(session, input, output) {
     })
   })
 
-  ### PRINT HINT ####
-  observeEvent(input$hint, {
-    sendSweetAlert(
-      session = session,
-      title = "Hint:",
-      closeOnClickOutside = TRUE,
-      p(bank[id, 6])
-    )
-    .generateStatement(
-      session = session, 
-      object = "hint", 
-      verb = "interacted", 
-      description = "Hint", 
-      value = bank[id, 6])
+
+  ### PRINT HINTS###
+  observeEvent(
+    eventExpr = input$hint, 
+    handlerExpr = {
+      withMathJax()
+      output$hintDisplay <- renderUI({
+        p(tags$b("Hint:"), bank[id, 6])
+      })
     })
+  
+  # observeEvent(input$hint, {
+  #   sendSweetAlert(
+  #     session = session,
+  #     title = "Hint:",
+  #     closeOnClickOutside = TRUE,
+  #     p(bank[id, 6])
+  #   )
+  #   .generateStatement(
+  #     session = session, 
+  #     object = "hint", 
+  #     verb = "interacted", 
+  #     description = "Hint", 
+  #     value = bank[id, 6])
+  #   })
 
   ### SUBMIT BUTTON###
   observeEvent(input$submit, {
@@ -1202,6 +1214,11 @@ server <- function(session, input, output) {
       })
       ### FEEDBACK###
       output$feedback <- renderUI({
+        return(NULL)
+      })
+      
+      ###HINT###
+      output$hintDisplay <- renderUI({
         return(NULL)
       })
     }
