@@ -332,11 +332,10 @@ ui <- list(
         tabItem(
           tabName = "game",
           h1("Matching Distributions Game"), 
-    
           fluidRow(
             column(
               width = 6,
-              p("Please select the distributions you'd like to use in this app
+              p("Please select the distributions you'd like to use in this app 
                 and click Filter")
             ),
             br(),
@@ -351,7 +350,7 @@ ui <- list(
                 width = "100%",
                 tags$div(
                   actionButton(
-                    inputId = "selectAllD",
+                    inputId = "selectAllD", 
                     label = "Unselect",
                     size = "small"
                   ),
@@ -373,7 +372,7 @@ ui <- list(
                       "Discrete Uniform",
                       "Poisson",
                       "Geometric",
-                      "Negative Binomial",
+                      "Negative Binomial", 
                       "Hypergeometric"
                     )
                   )
@@ -381,7 +380,7 @@ ui <- list(
               ),
               verbatimTextOutput(outputId = "res1")
             ),
-
+            
             column(
               width = 2,
               dropdownButton(
@@ -392,21 +391,21 @@ ui <- list(
                 # tags$label("Pick which continuous distribution(s) to use in the app:"),
                 tags$div(
                   actionButton("selectAllC", "Unselect",
-                    size =
-                      "small"
+                               size =
+                                 "small"
                   ),
                   checkboxGroupInput(
                     inputId = "continuouslist",
                     label = NULL,
-                    choices = c("Continuous Uniform",
-                                "Gamma",
-                                "Exponential",
-                                "Normal",
+                    choices = c("Continuous Uniform", 
+                                "Gamma", 
+                                "Exponential", 
+                                "Normal", 
                                 "Beta"),
-                    selected = c("Continuous Uniform",
-                                 "Gamma",
-                                 "Exponential",
-                                 "Normal",
+                    selected = c("Continuous Uniform", 
+                                 "Gamma", 
+                                 "Exponential", 
+                                 "Normal", 
                                  "Beta")
                   )
                 )
@@ -426,40 +425,42 @@ ui <- list(
             )
           ),
           
-    
           titlePanel("Matching the text with the distribution"),
           sidebarLayout(
-
             sidebarPanel(
-              style = "background-color: #FFFFFF",
-              width = 6,
-
+              style = "background-color: white",
               withMathJax(uiOutput("question")),
-
+              # tags$style(
+              #   type = "text/css",
+              #   "#question {font-size: 125%;background-color: #EAF2F8;color: black;}",
+              #   ".well { padding: 12px; margin-bottom: 15px; max-width: 1000px; }"
+              # ), 
+              
               fluidRow(column(
                 10,
-                p("Identify the distribution of given text:",
+                p(
+                  "Identify the distribution of given text:",
                   tags$li(
                     style = "display: inline-block;",
                     bsButton(
                       inputId = "hint",
-                      label = "hint",
+                      label = "hint", 
                       icon = icon("question"),
-                      size = "large",
+                      size = "large", 
                       disabled = TRUE
                     )
                   )
                 )
               )),
-
+              
               fluidRow(
-                #tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
+                tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
                 column(
                   8,
                   uiOutput("answerbox"),
                   selectInput(
-                    inputId = "answer",
-                    choices = "",
+                    inputId = "answer", 
+                    choices = "", 
                     c("Select Distribution"),
                     width = "100%"
                   )
@@ -479,7 +480,7 @@ ui <- list(
                 br(),
                 br(),
                 br(),
-
+                
                 column(
                   4,
                   bsButton(
@@ -505,27 +506,27 @@ ui <- list(
                 br(),
                 uiOutput("test1"),
                 uiOutput("test2")
-              ),
-
-
+              ), 
+              
+              
               fluidRow(column(
                 width = 12,
                 uiOutput("feedback")
+              )), 
+              
+              
+              br(),
+              br(),
+              br(),
+              
+              tags$head(tags$style(
+                HTML("#result {font-size: 17px;background-color:#EAF2F8}")
               )),
-
-
-              br(),
-              br(),
-              br()
-
-              # tags$head(tags$style(
-              #   HTML("#result {font-size: 17px;background-color:#EAF2F8}")
-              # )),
-
+              width = 6
             ),
             mainPanel(
               width = 6,
-
+              
               fluidRow(uiOutput("correct", align = "center")),
               fluidRow(uiOutput("distPlot", align = "center")),
               br(),
@@ -534,8 +535,8 @@ ui <- list(
             ),
             position = "left"
           )
-        ),
-
+        ), 
+        
     
         #### Set up the References Page ----
         tabItem(
@@ -548,6 +549,7 @@ ui <- list(
               Your Shiny Apps in Seconds. R package version 1.1. Available from
               https://CRAN.R-project.org/package=shinyjs"
           ),
+          
           p(
             class = "hangingindent",
             "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
@@ -583,6 +585,8 @@ ui <- list(
             Custom Inputs Widgets for Shiny. R package version 0.5.3. Available 
             from https://CRAN.R-project.org/package=shinyWidgets"
           ),
+          
+          
         
           br(),
           br(),
@@ -592,7 +596,8 @@ ui <- list(
         )
       )
     )
-  ) 
+)
+   
 
 
 # Define server logic ----
