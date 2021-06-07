@@ -1249,13 +1249,16 @@ server <- function(session, input, output) {
         WIN <- value$correct == WIN_STATE
         if (WIN) {
           GAME_OVER <<- TRUE
-          sendSweetAlert(
-            session = session,
-            title = "Success:",
-            type = "success",
-            closeOnClickOutside = TRUE,
-            h4("Congrats! You Win! Please click Restart to start over.")
-          )
+          output$congrats <- renderUI({
+            p(tags$b("Hint:"), bank[id, 6])
+          })
+          # sendSweetAlert(
+          #   session = session,
+          #   title = "Success:",
+          #   type = "success",
+          #   closeOnClickOutside = TRUE,
+          #   h4("Congrats! You Win! Please click Restart to start over.")
+          # )
 
           updateButton(
             session = session, 
