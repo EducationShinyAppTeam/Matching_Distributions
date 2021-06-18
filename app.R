@@ -25,7 +25,7 @@ ui <- list(
     ### Create the app header ----
     dashboardHeader(
       title = "Matching Distributions",
-      titleWidth = 300,
+      titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
       tags$li(
         class = "dropdown",
