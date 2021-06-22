@@ -219,8 +219,8 @@ ui <- list(
                       "of type 2 items"),
               tags$li(tags$b("Example: "), "A bowl contains 30 red marbles and 
                       60 black marbles. You randomly choose 15 marbles from the 
-                      bowl. What is the probability that the number of blue 
-                      marbles chose in the 15 marble sample is X.")
+                      bowl. The number of blue marbles in this sample follows a
+                      hypergeometric distribution.")
             ), 
             
             box(
@@ -298,7 +298,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               tags$li(tags$b("Model: "), "Time until kth rare independent event."), 
-              tags$li(tags$b("Example: "), "How long until there are ten fata 
+              tags$li(tags$b("Example: "), "How long until there are ten fatal 
                                             scuba diving accidents in Australia.")
             )
           ),
@@ -332,13 +332,12 @@ ui <- list(
         tabItem(
           tabName = "game",
           h1("Matching Distributions Game"), 
+          p("Please select the distributions you'd like to use in this app 
+                and click Filter"), 
           fluidRow(
             column(
               width = 6,
-              p("Please select the distributions you'd like to use in this app 
-                and click Filter")
             ),
-            br(),
             br(),
             br(),
             column(
@@ -701,14 +700,14 @@ server <- function(session, input, output) {
 
   observeEvent(input$submit, {
     updateButton(
-      session = session, 
-      inputId = "submit", 
+      session = session,
+      inputId = "submit",
       disabled = TRUE)
     updateButton(
-      session = session, 
-      inputId = "hint", 
+      session = session,
+      inputId = "hint",
       disabled = TRUE)
-    
+
   })
 
   observeEvent(input$nextq, {
@@ -744,6 +743,14 @@ server <- function(session, input, output) {
       session = session, 
       inputId = "hint", 
       disabled = TRUE)
+    updateButton(
+      session = session, 
+      inputId = "nextq", 
+      disabled = TRUE)
+    output$hintDisplay <- renderUI({
+      return(NULL)
+    })
+    
 
     GAME_OVER <<- FALSE
     .generateStatement(
@@ -1038,10 +1045,10 @@ server <- function(session, input, output) {
     continuouschosen <- input$continuouslist
     distributionchosen <<- c(discretechosen, continuouschosen)
 
-    .generateStatement(session, object = "filter", verb = "interacted", 
-          description = "Please select the distributions you'd like to use 
-          in this app and click Filter", value = paste(distributionchosen, 
-          sep = ", ", collapse = ", "))
+    # .generateStatement(session, object = "filter", verb = "interacted", 
+    #       description = "Please select the distributions you'd like to use 
+    #       in this app and click Filter", value = paste(distributionchosen, 
+    #       sep = ", ", collapse = ", "))
 
     numberRow <- numeric()
     # numberRow <- dplyr::filter(bank, bank$distribution %in% distributionchosen)
