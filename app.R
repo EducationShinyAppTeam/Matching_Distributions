@@ -1,3 +1,4 @@
+# Load libraries ----
 library(shiny)
 library(shinyBS)
 library(shinyWidgets)
@@ -5,6 +6,7 @@ library(shinydashboard)
 library(boastUtils)
 library(dplyr)
 
+<<<<<<< Updated upstream
 ## App Meta Data----------------------------------------------------------------
 APP_TITLE <<- "Matching Distributions"
 APP_DESCP  <<- paste(
@@ -43,6 +45,19 @@ contDists <- qBank %>%
   dplyr::arrange(distribution)
 
 # Create the UI ----
+=======
+# Define Global Constants ----
+MAX_TRIES <- 4
+WIN_STATE <- 10
+GAME_OVER <- FALSE
+
+numberRow <- numeric()
+hint <- c()
+correct_answer <- c()
+bank <- read.csv(file = "distributionG.csv", header = TRUE)
+
+# Define UI for App ----
+>>>>>>> Stashed changes
 ui <- list(
   dashboardPage(
     skin = "blue",
@@ -51,6 +66,7 @@ ui <- list(
       title = "Matching Distributions",
       titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
+<<<<<<< Updated upstream
       tags$li(class = "dropdown",
               tags$a(href = "https://shinyapps.science.psu.edu/",
                      icon("home")
@@ -64,16 +80,42 @@ ui <- list(
         id = "tabs",
         menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
         menuItem("Game", tabName = "matchingDist", icon = icon("gamepad")),
+=======
+      tags$li(
+        class = "dropdown",
+        boastUtils::surveyLink(name = "Matching_Distributions")
+      ),
+      tags$li(
+        class = "dropdown",
+        tags$a(href = 'https://shinyapps.science.psu.edu/', icon("home"))
+      )
+    ),
+    ### Create the sidebar/left navigation menu ----
+    dashboardSidebar(
+      sidebarMenu(
+        id = "pages",
+        menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
+        menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
+        menuItem("Game", tabName = "game", icon = icon("gamepad")),
+>>>>>>> Stashed changes
         menuItem("References", tabName = "references", icon = icon("leanpub"))
       ),
       tags$div(
         class = "sidebar-logo",
+<<<<<<< Updated upstream
         boastUtils::psu_eberly_logo("reversed")
       )
     ),
     ## Body ----
+=======
+        boastUtils::sidebarFooter()
+      )
+    ),
+    ### Create the content ----
+>>>>>>> Stashed changes
     dashboardBody(
       tabItems(
+<<<<<<< Updated upstream
         # Overview Tab ----
         tabItem(
           tabName = "overview",
@@ -91,6 +133,31 @@ ui <- list(
           ),
           h2("Instructions"),
           tags$ol(
+=======
+        tabItem(
+          tabName = "overview",
+          h1("Matching Distributions"),
+          p("In this App, you will gain practice at associating context with
+            different probability distributions."),
+          br(),
+          h2("Instructions"),
+          tags$ul(
+            tags$li(
+              "You will start this game with a little man on the top of a tree,
+              and you are trying to prevent his fall to the ground.  If you
+              provide a wrong answer, he falls to a lower branch and eventually
+              to the ground. If you get 10 questions correct before he falls to
+              the ground, you have won the game and saved the little man!"
+            ),
+            tags$li(
+              "Please select which probability distribution(s) you would like to
+              work on and hit the 'filter button."
+            ),
+            tags$li(
+              "Read the given text and choose a distribution from the dropdown
+              menu. Make sure you understand the scenario."
+            ),
+>>>>>>> Stashed changes
             tags$li(
               "Select which probability distribution(s) you'd like to work on from
             the Discrete and Continous distribution menus. (All are selected by
@@ -109,7 +176,11 @@ ui <- list(
             tags$li("Press the 'Next Question' button to move on the next question.")
           ),
           div(
+<<<<<<< Updated upstream
             style = "text-align:center",
+=======
+            style = "text-align:center;",
+>>>>>>> Stashed changes
             bsButton(
               inputId = "go",
               label = "GO!",
@@ -119,6 +190,7 @@ ui <- list(
             )
           ),
           br(),
+<<<<<<< Updated upstream
           br(),
           h2("Acknowledgements"),
           p(
@@ -131,9 +203,28 @@ ui <- list(
           )
         ),
         # Game Tab ----
+=======
+          h3("Acknowledgements"),
+          p(
+            "This app was developed and coded by Zhiliang Zhang and futher
+            updated by Yiyang Wang, Yuqing Lei and Shravani Samala in 2021.",
+            br(),
+            br(),
+            br(),
+            "Cite this app as:",
+            br(),
+            boastUtils::citeApp(),
+            br(),
+            br(),
+            div(class = "updated", "Last Update: 10/8/2021 by NJH.")
+          )
+        ),
+        #### Set up the Prerequisites Page ----
+>>>>>>> Stashed changes
         tabItem(
           tabName = "matchingDist",
           withMathJax(),
+<<<<<<< Updated upstream
           h2("Matching Contexts with Distributions"),
           p("Please select the distributions you'd like to use in this app and
           click the 'Filter' button."),
@@ -141,11 +232,245 @@ ui <- list(
           fluidRow(
             column(
               width = 3,
+=======
+          h2("Prerequisites"),
+          p("In order to get the most out of this app, please review the
+            following:"),
+          tags$ul(
+            tags$li("Learn the difference between discrete distributions and
+                    continuous distributions."),
+            tags$li("Learn what types of situations each probability distribution
+                    is used for."),
+            tags$li("Review each distribution's parameters, pmf and/or cdf, mean,
+                    variance, and moment-generating function in the ",
+                    tags$a(
+                      href = "https://psu-eberly.shinyapps.io/probability_applications/",
+                      "Probability Applications",
+                      class = "bodylinks"
+                    ),
+                    "app's prerequisite page!")
+          ),
+          h3("Discrete Distributions"),
+          p("For Discrete Distributions, data can only take on certain values in
+            a discrete set such as the whole numbers or integers."),
+          fluidRow(
+            box(
+              title = "Bernoulli",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "any situation where we can think of as 
+                entailing a 'success' (typically coded as 1) and 'failure' 
+                (everything that isn't a 'success', typically coded as 0).",
+                br(),
+                tags$strong("Example: "), "getting a 'heads' when flipping a coin."
+              )
+            ),
+            box(
+              title = "Binomial",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "The number of 'successes' we see in a
+                fixed number of independent Bernoulli trials.",
+                br(),
+                tags$strong("Example: "), "how many 'heads' we get when we flip
+                a coin 10 times."
+              )
+            )
+          ),
+          fluidRow(
+            box(
+              title = "Discrete Uniform",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "any situation where we believe that
+                statistical fairness holds; that is, we anticipate that each
+                individual outcome has the same probability of occurring.",
+                br(),
+                tags$strong("Example: "), "observing the top facing number when
+                rolling a standard, six-sided, fair, die."
+              )
+            ),
+            box(
+              title = "Geometric",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "any situation where we are tracking how
+                many independent trials we conduct before we observe the first
+                success.",
+                br(),
+                tags$strong("Example: "), "how many times you have to flip a coin
+                until you first get 'heads'."
+              )
+            )
+          ),
+          fluidRow(
+            box(
+              title = "Hypergeometric",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "any situation where we first imagine a 
+                collection of ", tags$em("N"), " total items. In this collection
+                there are ", tags$em("m"), " type 1 items and ", tags$em("N - m"),
+                " type 2 items. We then imagine randomly selecting ", tags$em("n"),
+                " items without replacement from the collection.",
+                br(),
+                tags$strong("Example: "), "a bowl contains 30 red marbles and 
+                      60 black marbles. You randomly choose 15 marbles from the 
+                      bowl. The number of black marbles in this sample follows a
+                      hypergeometric distribution."
+              )
+            ), 
+            box(
+              title = "Negative Binomial",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "any situation where we are tracking how
+                many independent trials we conduct before we observe the ",
+                tags$em("k"), "-th success.",
+                br(),
+                tags$strong("Example: "), "how many times you have to flip a coin
+                until you get ten 'heads'."
+              )
+            )
+          ),
+          fluidRow(
+            box(
+              title = "Poisson",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "any situation where we are interested in
+                the how many times we observe a rare event (the event's count) in
+                a fixed amount of time or space.",
+                br(),
+                tags$strong("Example: "), "the number of fatal scuba diving 
+                accidents in Australia next year."
+              )
+            )
+          ),
+          h3("Continuous Distributions"),
+          p("For Continuous Distributions, data can take on values from a 
+            continuum."),
+          fluidRow(
+            box(
+              title = "Beta",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "the specific rank of fixed number of 
+                independent standard uniforms.",
+                br(),
+                tags$strong("Example: "), "the median of five trials for the
+                proportion of the way around a circle that a spinner lands."
+              )
+            ),
+            box(
+              title = "Continuous Uniform",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "when we imagine the probability spread
+                evenly (uniformly) over the continuum.",
+                br(),
+                tags$strong("Example: "), "the measure of the angle swept out by
+                the spinner from a fixed reference point."
+              )
+            )
+          ),
+          fluidRow(
+            box(
+              title = "Exponential",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "the time until the next independent and
+                rare event.",
+                br(),
+                tags$strong("Example: "), "how long until the next fatal scuba
+                diving accident occurs in Australia."
+              )
+            ),
+            box(
+              title = "Gamma",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "the time until the ", tags$em("k"), "-th
+                rare independent event occurs.",
+                br(),
+                tags$strong("Example: "), "how long until there have been ten
+                fatal scuba diving accidents occur in Australia."
+              )
+            )
+          ),
+          fluidRow(
+            box(
+              title = "Normal",
+              status = "primary",
+              width = 6,
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p(tags$strong("Model: "), "sum or [arithmetic] mean from a large
+                sample.",
+                br(),
+                tags$strong("Example: "), "the [arithmetic] mean income of a 
+                random sample of 1000 people."
+              )
+            )
+          ),
+          div(
+            style = "text-align:center;",
+            bsButton(
+              inputId = "go2",
+              label = "GO!",
+              icon("gamepad"),
+              size = "large"
+            )
+          )
+        ),
+        #### Game Page ----
+        tabItem(
+          tabName = "game",
+          withMathJax(),
+          h2("Matching Distributions Game"),
+          p("Identify the appropriate distribution based upon the context 
+            provided. To win, you will need to correctly identify ", WIN_STATE, 
+            " distributions before the man falls to the ground. Each time you 
+            incorrectly guess, he will move down a branch; you make at most ",
+            MAX_TRIES, " mistakes."),
+          hr(),
+          h3("Select Your Distributions"),
+          p("Please select the distributions you'd like to use for this game and
+            then click the 'Filter' button to begin."),
+          fluidRow(
+            column(
+              width = 3,
+              offset = 0,
+>>>>>>> Stashed changes
               dropdownButton(
                 inputId = "discreteDrop",
                 label = "Discrete distributions",
+                size = "lg",
                 circle = FALSE,
                 status = "default",
+<<<<<<< Updated upstream
                 size = "lg",
                 bsButton(
                   inputId = "selectAllD",
@@ -157,17 +482,55 @@ ui <- list(
                   label = NULL,
                   choices = discDists$distribution,
                   selected = discDists$distribution
+=======
+                width = "100%",
+                tags$div(
+                  bsButton(
+                    inputId = "selectAllD",
+                    label = "Unselect",
+                    size = "small"
+                  ),
+                  checkboxGroupInput(
+                    inputId = "discretelist",
+                    label = NULL,
+                    choices = c(
+                      "Bernoulli",
+                      "Binomial",
+                      "Discrete Uniform",
+                      "Poisson",
+                      "Geometric",
+                      "Negative Binomial",
+                      "Hypergeometric"
+                    ),
+                    selected = c(
+                      "Bernoulli",
+                      "Binomial",
+                      "Discrete Uniform",
+                      "Poisson",
+                      "Geometric",
+                      "Negative Binomial",
+                      "Hypergeometric"
+                    )
+                  )
+>>>>>>> Stashed changes
                 )
               )
             ),
             column(
+<<<<<<< Updated upstream
               width = 4,
               offset = 1,
+=======
+              width = 3,
+              offset = 0,
+>>>>>>> Stashed changes
               dropdownButton(
                 inputId = "continousDrop",
                 label = "Continuous distributions",
                 circle = FALSE,
+                size = "lg",
                 status = "default",
+<<<<<<< Updated upstream
                 size = "lg",
                 bsButton(
                   inputId = "selectAllC",
@@ -179,21 +542,57 @@ ui <- list(
                   label = NULL,
                   choices = contDists$distribution,
                   selected = contDists$distribution
+=======
+                width = "100%",
+                tags$div(
+                  bsButton(
+                    inputId = "selectAllC",
+                    label = "Unselect",
+                    size = "small"
+                  ),
+                  checkboxGroupInput(
+                    inputId = "continuouslist",
+                    label = NULL,
+                    choices = c(
+                      "Continuous Uniform",
+                      "Gamma",
+                      "Exponential",
+                      "Normal",
+                      "Beta"
+                    ),
+                    selected = c(
+                      "Continuous Uniform",
+                      "Gamma",
+                      "Exponential",
+                      "Normal",
+                      "Beta"
+                    )
+                  )
+>>>>>>> Stashed changes
                 )
               )
             ),
             column(
               width = 2,
+<<<<<<< Updated upstream
               offset = 1,
+=======
+              offset = 0,
+>>>>>>> Stashed changes
               bsButton(
                 inputId = "filter",
                 label = "Filter",
                 size = "large",
+<<<<<<< Updated upstream
                 style = "success",
+=======
+                style = "primary",
+>>>>>>> Stashed changes
                 disabled = FALSE
               )
             )
           ),
+<<<<<<< Updated upstream
           br(),
           ### Main display area ----
           fluidRow(
@@ -226,6 +625,126 @@ ui <- list(
                   style = "warning",
                   disabled = TRUE
                 ),
+=======
+          hr(),
+          h3("Play"),
+          fluidRow(
+            column(
+              width = 5,
+              offset = 0,
+              wellPanel(
+                p("Your current context:"),
+                uiOutput("question"),
+                fluidRow(
+                  column(
+                    width = 3,
+                    bsButton(
+                      inputId = "hint",
+                      label = "Hint",
+                      icon = icon("question"),
+                      size = "large",
+                      disabled = TRUE
+                    )
+                  ),
+                  column(
+                    width = 9,
+                    uiOutput("hintDisplay")
+                  )
+                ),
+                selectInput(
+                  inputId = "answer",
+                  label = "Select the distribution that matches",
+                  choices = "", 
+                  selected = "",
+                  width = "100%"
+                ),
+                fluidRow(
+                  column(
+                    width = 3,
+                    bsButton(
+                      inputId = "submit",
+                      label = "Submit",
+                      size = "large",
+                      style = "default",
+                      disabled = TRUE
+                    )
+                  ),
+                  column(
+                    width = 1,
+                    uiOutput("mark")
+                  )
+                ),
+                uiOutput("feedback"),
+                br(),
+                fluidRow(
+                  column(
+                    width = 4,
+                    bsButton(
+                      inputId = "nextq",
+                      label = "Next Question",
+                      size = "large",
+                      style = "success",
+                      disabled = TRUE
+                    )
+                  ),
+                  column(
+                    width = 4,
+                    bsButton(
+                      inputId = "restart",
+                      label = "Restart the game",
+                      size = "large",
+                      style = "warning",
+                      disabled = FALSE
+                    )
+                  )
+                ),
+                br()
+              )
+            )
+          ),
+          titlePanel("Matching the text with the distribution"),
+          sidebarLayout(
+            sidebarPanel(
+              style = "background-color: white",
+              # withMathJax(uiOutput("question")),
+              
+              fluidRow(column(
+                10,
+                p(
+                  "Identify the distribution of given text:",
+                  tags$li(
+                    style = "display: inline-block;",
+                    # bsButton(
+                    #   inputId = "hint",
+                    #   label = "hint", 
+                    #   icon = icon("question"),
+                    #   size = "large", 
+                    #   disabled = TRUE
+                    # )
+                  )
+                )
+              )),
+              
+              fluidRow(
+                tags$style(type = "text/css", ".selectize-dropdown-content {max-height: 500px; }"),
+                column(
+                  8,
+                  uiOutput("answerbox"),
+                  
+                ),
+                br(),
+
+                column(1),
+                column(
+                  3
+                  
+                ),
+                br(),
+                br(),
+                br(),
+
+                
+>>>>>>> Stashed changes
                 br(),
                 bsButton(
                   inputId = "nextQ",
@@ -235,6 +754,7 @@ ui <- list(
                   disabled = TRUE
                 ),
                 br(),
+<<<<<<< Updated upstream
                 bsButton(
                   inputId = "restart",
                   label = "Restart the game",
@@ -243,6 +763,34 @@ ui <- list(
                   disabled = FALSE
                 )
               )
+=======
+                br(),
+                uiOutput("test1"),
+                uiOutput("test2")
+              ), 
+              
+              
+              fluidRow(column(
+                width = 12
+              )), 
+              
+              
+              br(),
+              br(),
+              br(),
+              tags$head(tags$style(
+                HTML("#result {font-size: 17px;background-color:#EAF2F8}")
+              )),
+              width = 6
+            ),
+            mainPanel(
+              width = 6,
+              fluidRow(uiOutput("correct", align = "center")),
+              fluidRow(uiOutput("distPlot", align = "center")),
+              br(),
+              br(),
+              br()
+>>>>>>> Stashed changes
             ),
             column(
               width = 7,
