@@ -14,7 +14,7 @@ GAME_OVER <- FALSE
 numberRow <- numeric()
 hint <- c()
 correct_answer <- c()
-bank <- read.csv(file = "distributionG.csv", header = TRUE)
+bank <- read.csv(file = "questionBank.csv", header = TRUE)
 
 # Define UI for App ----
 ui <- list(
