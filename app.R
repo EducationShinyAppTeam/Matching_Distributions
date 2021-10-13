@@ -748,6 +748,16 @@ server <- function(session, input, output) {
           withMathJax(p(filteredQuestions()$context[rowNumber()]))
         })
       }
+      
+      stmt <- boastUtils::generateStatement(
+        session,
+        object = "filter",
+        verb = "interacted",
+        description = "Please select the distributions you'd like to use in this app and click Filter",
+        response = paste(chosenDists(), sep = ", ", collapse = ", ")
+      )
+      
+      boastUtils::storeStatement(session, stmt)
     },
     ignoreNULL = TRUE,
     ignoreInit = TRUE
@@ -779,7 +789,8 @@ server <- function(session, input, output) {
           disabled = TRUE
         )
         #### Score choice ----
-        if (input$answer == filteredQuestions()$distribution[rowNumber()]) {
+        success <- input$answer == filteredQuestions()$distribution[rowNumber()]
+        if (success) {
           score(score() + 1)
           output$mark <- boastUtils::renderIcon(icon = "correct")
         } else {
@@ -791,6 +802,19 @@ server <- function(session, input, output) {
         output$feedback <- renderUI({
           withMathJax(p(filteredQuestions()$feedback[rowNumber()]))
         })
+        
+        stmt <- boastUtils::generateStatement(
+          session,
+          object = "submit",
+          verb = "answered",
+          description = filteredQuestions()$context[rowNumber()],
+          response = input$answer,
+          interactionType = "choice",
+          success = success,
+          completion = score() == WIN_STATE
+        )
+        
+        boastUtils::storeStatement(session, stmt)
       }
       
       ### Check if game has been won or lost ----
@@ -801,6 +825,14 @@ server <- function(session, input, output) {
           text = "You have won the game!",
           type = "success"
         )
+        
+        stmt <- boastUtils::generateStatement(
+          session = session,
+          object = "game",
+          verb = "completed",
+          description = "Player has won the game.")
+        
+        boastUtils::storeStatement(session, stmt)
       } else if (mistakes() == MAX_TRIES) {
         sendSweetAlert(
           session = session,
@@ -808,6 +840,14 @@ server <- function(session, input, output) {
           text = "The man fell to the ground. Please try again.",
           type = "error"
         )
+        
+        stmt <- boastUtils::generateStatement(
+          session = session,
+          object = "game",
+          verb = "completed",
+          description = "Player has lost the game.")
+        
+        boastUtils::storeStatement(session, stmt)
       } else {
         #### Enable next question
         updateButton(
@@ -933,6 +973,14 @@ server <- function(session, input, output) {
       rowNumber(0)
       score(0)
       mistakes(0)
+      
+      stmt <- boastUtils::generateStatement(
+        session = session,
+        object = "restart",
+        verb = "interacted",
+        description = "Game has been restarted.")
+      
+      boastUtils::storeStatement(session, stmt)
     },
     ignoreNULL = TRUE,
     ignoreInit = TRUE
@@ -954,19 +1002,22 @@ server <- function(session, input, output) {
     handlerExpr = {
       if (input$hint) {
         output$hintDisplay <- renderUI({
-          withMathJax(p(filteredQuestions()$hint[rowNumber()]))
+          hint <- filteredQuestions()$hint[rowNumber()]
+          
+          stmt <- boastUtils::generateStatement(
+            session = session,
+            object = "hint",
+            verb = "interacted",
+            description = "Hint",
+            response = hint)
+          
+          boastUtils::storeStatement(session, stmt)
+          
+          withMathJax(p(hint))
         })
       } else {
         output$hintDisplay <- NULL
       }
-      
-      # Bob, update this as needed
-      boastUtils::generateStatement(
-        session = session,
-        object = "hint",
-        verb = "interacted",
-        description = "Hint",
-        response = questionBank[id, 6])
     })
   
   ### Number correct display ----
