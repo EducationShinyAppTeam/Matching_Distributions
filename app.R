@@ -29,10 +29,10 @@ contDists <- rawBank %>%
   dplyr::arrange(distribution)
 
 # Investigate these constants ----
+
 numberRow <- numeric()
 hint <- c()
 correct_answer <- c()
-
 
 # Define UI for App ----
 ui <- list(
@@ -571,8 +571,8 @@ ui <- list(
         )
       )
     )
-  )
 )
+   
 
 # Define server logic ----
 server <- function(session, input, output) {
@@ -606,7 +606,7 @@ server <- function(session, input, output) {
         inputId = "pages",
         selected = "prerequisites")
     })
-  
+      
   ## Go button prerequisites to challenge----
   observeEvent(
     eventExpr = input$go2,
